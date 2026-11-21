@@ -59,7 +59,7 @@ function Pregunta({ nombre, texto, valor, onChange, ayuda }: { nombre: string; t
       <legend className="text-[17px] font-semibold">{texto}</legend>
       <div className="mt-2 grid grid-cols-2 gap-1 rounded-xl bg-papel p-1 sm:max-w-xs">
         {(["no", "si"] as const).map((v) => (
-          <label key={v} className={`flex min-h-11 cursor-pointer items-center justify-center rounded-lg text-[17px] transition-[background-color,box-shadow] duration-150 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-marca ${valor === v ? "bg-white font-semibold shadow-[0_1px_3px_rgba(0,0,0,.12)]" : "text-tinta-suave"}`}>
+          <label key={v} className={`flex min-h-11 cursor-pointer items-center justify-center rounded-lg text-[17px] transition-[background-color,box-shadow] duration-150 has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-marca ${valor === v ? "bg-superficie font-semibold shadow-[0_1px_3px_rgba(0,0,0,.12)]" : "text-tinta-suave"}`}>
             <input type="radio" name={nombre} checked={valor === v} onChange={() => onChange(v)} className="sr-only" />
             {v === "si" ? "Sí" : "No"}
           </label>

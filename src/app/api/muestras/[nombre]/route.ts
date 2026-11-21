@@ -5,6 +5,7 @@ const PERMITIDOS: Record<string, string> = {
   "sistema_antiguo_contribuyentes.csv": "text/csv; charset=windows-1252",
   "exportacion_gestor_2025.json": "application/json",
   "importacion_invalida.csv": "text/csv",
+  "padron_antiguo_2012.dbf": "application/x-dbf",
   "dpi_MUESTRA.pdf": "application/pdf",
   "patente_empresa_MUESTRA.pdf": "application/pdf",
   "constancia_rtu_MUESTRA.pdf": "application/pdf",

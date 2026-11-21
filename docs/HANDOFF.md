@@ -31,7 +31,7 @@ Yo (Claude en la sesión de quique) sigo con: recorrido e2e, README, guion de 3 
 ### Tarea 2 — Diapositivas de la presentación (3 minutos)
 - Usa la skill `frontend-slides` (si tu cuenta no la tiene, un HTML simple basta). Carpeta: `presentacion/`.
 - Basa el contenido en `docs/GUION.md` (lo escribo yo; estará en la rama a las ~2:20) y en las capturas de `docs/capturas/`.
-- 6 diapositivas máximo: problema (la persona como puente entre sistemas), qué hace LegacyArchive, demo en vivo (momento clave: el IGSS ya tiene los datos), qué es real y qué está simulado, Croma, cierre.
+- 6 diapositivas máximo: problema (la persona como puente entre sistemas), qué hace Lazô, demo en vivo (momento clave: el IGSS ya tiene los datos), qué es real y qué está simulado, Croma, cierre.
 - No anuncies porcentajes de ahorro: solo cifras medidas en la demo (campos reutilizados, escritos, pendientes, tiempo del recorrido).
 
 ### Tarea 3 — Ensayo en la laptop de la presentación
@@ -43,4 +43,4 @@ Yo (Claude en la sesión de quique) sigo con: recorrido e2e, README, guion de 3 
 - De la cuenta de quique (si tu cuenta las tiene): `emil-design-eng` para pulido de interfaz y `frontend-slides` para la presentación.
 
 ## Prompt sugerido para tu sesión de Claude
-> Lee `CLAUDE.md` y `docs/HANDOFF.md` del repo LegacyArchive (rama `feat/demo-expediente`). Usa las skills de superpowers de `.claude/skills`. Haz la Tarea 1 (probar Croma) y luego la Tarea 2 (diapositivas). Trabaja en la rama `feat/croma-y-presentacion`, sin `Co-Authored-By: Claude` en los commits, y abre un PR contra `feat/demo-expediente`. Tengo hasta las 3:00 p. m. de Guatemala.
+> Lee `CLAUDE.md` y `docs/HANDOFF.md` del repo Lazô (rama `feat/demo-expediente`). Usa las skills de superpowers de `.claude/skills`. Haz la Tarea 1 (probar Croma) y luego la Tarea 2 (diapositivas). Trabaja en la rama `feat/croma-y-presentacion`, sin `Co-Authored-By: Claude` en los commits, y abre un PR contra `feat/demo-expediente`. Tengo hasta las 3:00 p. m. de Guatemala.

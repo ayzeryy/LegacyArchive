@@ -56,7 +56,7 @@ try {
   ok("1. Busca el trámite, ve el video de ejemplo y lo abre como persona individual");
 
   // 2. Importación inválida, luego caso de demostración
-  await page.locator('input[type=file][accept=".csv,.json"]').setInputFiles(path.join(raiz, "muestras", "importacion_invalida.csv"));
+  await page.locator('input[type=file][accept=".csv,.dbf,.json,.mdb"]').setInputFiles(path.join(raiz, "muestras", "importacion_invalida.csv"));
   await page.locator("p[role=alert]").waitFor();
   afirmar((await page.locator("p[role=alert]").innerText()).includes("Faltan las columnas"), "2a. Una importación inválida muestra el error y no guarda nada");
   await page.getByRole("button", { name: "Cargar caso de demostración" }).click();

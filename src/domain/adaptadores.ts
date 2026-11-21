@@ -27,7 +27,7 @@ export interface RegistroNormalizado {
   valores: ValorExtraido[];
 }
 
-export type FormatoFuente = "csv_heredado" | "json_exportacion";
+export type FormatoFuente = "csv_heredado" | "dbf_heredado" | "json_exportacion";
 
 export type ResultadoLectura =
   | { ok: true; formato: FormatoFuente; registros: RegistroNormalizado[]; errores: { fila: number; mensaje: string }[]; totalFilas: number }
@@ -37,7 +37,11 @@ export function leerFuente(nombreArchivo: string, bytes: Uint8Array): ResultadoL
   const ext = nombreArchivo.toLowerCase().split(".").pop();
   if (ext === "csv") return leerCsvHeredado(decodificar(bytes));
   if (ext === "json") return leerJsonExportacion(decodificar(bytes));
-  return { ok: false, error: `Formato no admitido (.${ext ?? "?"}). Usa el CSV del sistema antiguo o el JSON de exportación.` };
+  if (ext === "dbf") return leerDbfHeredado(bytes);
+  if (ext === "mdb" || ext === "accdb") {
+    return { ok: false, error: "Los archivos de Access (.mdb) todavía no se leen en esta demo. Exporta la tabla a DBF o CSV." };
+  }
+  return { ok: false, error: `Formato no admitido (.${ext ?? "?"}). Usa el CSV o el DBF del sistema antiguo, o el JSON de exportación.` };
 }
 
 /** UTF-8 si es válido; si no, Windows-1252 (habitual en sistemas antiguos). */
@@ -82,12 +86,19 @@ function leerCsvHeredado(texto: string): ResultadoLectura {
   if (faltan.length) {
     return { ok: false, error: `El CSV no tiene la estructura del sistema antiguo. Faltan las columnas: ${faltan.join(", ")}.` };
   }
+  return mapearTablaHeredada(cab, lineas.slice(1).map((l) => dividirLinea(l, sep)), "csv_heredado", 2);
+}
+
+/**
+ * Lleva una tabla del sistema antiguo (CSV o DBF, mismas columnas) al modelo común.
+ * `primeraFila` es el número que se muestra al usuario para la primera fila de datos.
+ */
+function mapearTablaHeredada(cab: string[], filas: string[][], formato: "csv_heredado" | "dbf_heredado", primeraFila: number): ResultadoLectura {
   const registros: RegistroNormalizado[] = [];
   const errores: { fila: number; mensaje: string }[] = [];
 
-  lineas.slice(1).forEach((linea, i) => {
-    const fila = i + 2;
-    const celdas = dividirLinea(linea, sep);
+  filas.forEach((celdas, i) => {
+    const fila = i + primeraFila;
     const get = (c: string) => limpiarEspacios(celdas[cab.indexOf(c)] ?? "");
     if (get("MUESTRA").toUpperCase() !== "SINTETICO") {
       errores.push({ fila, mensaje: "La fila no está marcada como sintética (MUESTRA=SINTETICO). Esta demo solo admite datos sintéticos." });
@@ -130,7 +141,63 @@ function leerCsvHeredado(texto: string): ResultadoLectura {
     registros.push({ indice: i, refExpediente: get("NO_EXP") || null, nombreReferencia: `${nombres} ${apellidos}`.trim(), cui, nit, valores });
   });
 
-  return { ok: true, formato: "csv_heredado", registros, errores, totalFilas: lineas.length - 1 };
+  return { ok: true, formato, registros, errores, totalFilas: filas.length };
+}
+
+// ---------- DBF heredado (dBASE III / FoxPro) ----------
+
+/**
+ * Lector mínimo de DBF, solo lectura: cabecera de 32 bytes, descriptores de campo
+ * de 32 bytes hasta 0x0D y registros de longitud fija. El texto se decodifica como
+ * Windows-1252. Los registros marcados como borrados («*») se ignoran.
+ */
+export function leerTablaDbf(bytes: Uint8Array): { campos: string[]; filas: string[][]; borrados: number } {
+  if (bytes.length < 33) throw new Error("El archivo es demasiado corto para ser un DBF.");
+  const vista = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+  const total = vista.getUint32(4, true);
+  const largoCabecera = vista.getUint16(8, true);
+  const largoRegistro = vista.getUint16(10, true);
+  if (largoCabecera < 33 || largoRegistro < 2 || largoCabecera > bytes.length) throw new Error("La cabecera del DBF no es válida.");
+  const texto = new TextDecoder("windows-1252");
+  const campos: { nombre: string; largo: number }[] = [];
+  for (let o = 32; o + 32 <= largoCabecera && bytes[o] !== 0x0d; o += 32) {
+    const crudo = bytes.subarray(o, o + 11);
+    const fin = crudo.indexOf(0);
+    campos.push({ nombre: texto.decode(fin >= 0 ? crudo.subarray(0, fin) : crudo).trim().toUpperCase(), largo: bytes[o + 16] });
+  }
+  if (campos.length === 0) throw new Error("El DBF no declara campos.");
+  const filas: string[][] = [];
+  let borrados = 0;
+  for (let r = 0; r < total; r++) {
+    const inicio = largoCabecera + r * largoRegistro;
+    if (inicio + largoRegistro > bytes.length) break;
+    if (bytes[inicio] === 0x2a) {
+      borrados++;
+      continue;
+    }
+    let o = inicio + 1;
+    filas.push(campos.map((c) => {
+      const v = texto.decode(bytes.subarray(o, o + c.largo)).replace(/\0/g, "").trim();
+      o += c.largo;
+      return v;
+    }));
+  }
+  return { campos: campos.map((c) => c.nombre), filas, borrados };
+}
+
+function leerDbfHeredado(bytes: Uint8Array): ResultadoLectura {
+  let tabla: ReturnType<typeof leerTablaDbf>;
+  try {
+    tabla = leerTablaDbf(bytes);
+  } catch (e) {
+    return { ok: false, error: (e as Error).message };
+  }
+  if (tabla.filas.length === 0) return { ok: false, error: "El DBF no tiene registros activos." };
+  const faltan = COLUMNAS_OBLIGATORIAS.filter((c) => !tabla.campos.includes(c));
+  if (faltan.length) {
+    return { ok: false, error: `El DBF no tiene la estructura del sistema antiguo. Faltan los campos: ${faltan.join(", ")}.` };
+  }
+  return mapearTablaHeredada(tabla.campos, tabla.filas, "dbf_heredado", 1);
 }
 
 // ---------- JSON de exportación ----------

@@ -14,7 +14,7 @@ export default async function Resumen({ params }: { params: Promise<{ id: string
   if (!d) notFound();
   const { tramite: t, evaluacion: ev } = d;
   return (
-    <article className="mx-auto max-w-3xl space-y-6 bg-white p-6 sm:p-10 print:p-0">
+    <article className="mx-auto max-w-3xl space-y-6 bg-superficie p-6 sm:p-10 print:p-0">
       <div className="no-imprimir flex justify-end"><BotonImprimir /></div>
       <header className="border-b border-linea pb-4">
         <p className="text-xs font-bold uppercase tracking-widest text-alerta">Datos sintéticos · no es una inscripción presentada ni aprobada</p>

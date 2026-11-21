@@ -1,46 +1,53 @@
 @import "tailwindcss";
 
 @theme {
-  /* Estilo tipo iOS: tipografía del sistema, grises de iOS y azul del sistema. */
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "Public Sans Variable", system-ui, sans-serif;
-  --color-tinta: #1c1c1e;
-  --color-tinta-suave: #6e6e73;
-  --color-papel: #f2f2f7;
-  --color-linea: #e5e5ea;
-  --color-marca: #007aff;
-  --color-marca-oscura: #0062cc;
-  --color-marca-clara: #e8f1ff;
-  --color-ok: #248a3d;
-  --color-ok-fondo: #e8f6ec;
-  --color-aviso: #9a5b00;
-  --color-aviso-fondo: #fff4e0;
-  --color-alerta: #d70015;
-  --color-alerta-fondo: #ffeceb;
-  --color-info: #0062cc;
-  --color-info-fondo: #e8f1ff;
+  /* Identidad Lazô: negro, naranja, quemado y beige (kit de marca Lazô). */
+  --font-sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", "Public Sans Variable", system-ui, sans-serif;
+  --color-tinta: #d9c3ab;
+  --color-tinta-suave: #baa58e;
+  --color-papel: #000000;
+  --color-superficie: #17120f;
+  --color-superficie-alta: #221a15;
+  --color-linea: #3a2f27;
+  --color-borde: #665342;
+  --color-marca: #f16001;
+  --color-marca-oscura: #c10801;
+  --color-marca-clara: #2a1508;
+  --color-ok: #8fd6a4;
+  --color-ok-fondo: #0f2417;
+  --color-aviso: #f5b96a;
+  --color-aviso-fondo: #2a1c0a;
+  --color-alerta: #ff8b7b;
+  --color-alerta-fondo: #2e0f0c;
+  --color-info: #e9d7c3;
+  --color-info-fondo: #241c16;
   --ease-salida: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
-html { background: var(--color-papel); color: var(--color-tinta); }
+html { background: var(--color-papel); color: var(--color-tinta); color-scheme: dark; }
+::selection { background: var(--color-marca); color: #000; }
 body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; font-size: 17px; }
 
 .boton {
   display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
-  border-radius: .75rem; padding: .75rem 1.25rem; font-weight: 600; font-size: 1rem;
+  border-radius: 999px; padding: .75rem 1.35rem; font-weight: 700; font-size: 1rem;
   transition: transform 160ms var(--ease-salida), background-color 150ms ease, box-shadow 150ms ease;
   min-height: 44px;
 }
 .boton:active:not(:disabled) { transform: scale(0.97); }
 .boton:disabled { opacity: .55; cursor: not-allowed; }
-.boton-primario { background: var(--color-marca); color: white; }
-@media (hover: hover) and (pointer: fine) { .boton-primario:hover:not(:disabled) { background: var(--color-marca-oscura); } .boton-secundario:hover:not(:disabled) { background: #eeece6; } }
-.boton-secundario { background: white; color: var(--color-tinta); box-shadow: inset 0 0 0 1px var(--color-linea); }
+.boton-primario { background: var(--color-marca); color: #000; }
+@media (hover: hover) and (pointer: fine) { .boton-primario:hover:not(:disabled) { background: #ff7a24; } .boton-secundario:hover:not(:disabled) { background: var(--color-superficie-alta); } }
+.boton-secundario { background: transparent; color: var(--color-tinta); box-shadow: inset 0 0 0 1px var(--color-borde); }
 .boton-chico { padding: .375rem .75rem; min-height: 36px; font-size: .875rem; }
 
-:focus-visible { outline: 3px solid #f2b600; outline-offset: 2px; border-radius: 4px; }
+:focus-visible { outline: 3px solid var(--color-tinta); outline-offset: 2px; border-radius: 4px; }
 
-.tarjeta { background: white; border: 1px solid transparent; border-radius: 1rem; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
-.campo { width: 100%; border: 1px solid var(--color-linea); border-radius: .75rem; padding: .5rem .75rem; background: white; min-height: 44px; }
+.tarjeta { background: var(--color-superficie); border: 1px solid var(--color-linea); border-radius: 1.5rem; }
+.campo { width: 100%; border: 1px solid var(--color-borde); border-radius: .75rem; padding: .5rem .75rem; background: #000; color: var(--color-tinta); min-height: 44px; }
+.campo::placeholder { color: #8a7866; }
+.degradado-lazo { background: linear-gradient(115deg, #d9c3ab 0%, #f16001 38%, #c10801 70%, #000 100%); }
+.texto-degradado { background: linear-gradient(100deg, #d9c3ab 0%, #f16001 55%, #c10801 100%); -webkit-background-clip: text; background-clip: text; color: transparent; }
 
 .aparecer { animation: aparecer 220ms var(--ease-salida) both; }
 @keyframes aparecer { from { opacity: 0; transform: translateY(4px); } }
@@ -48,7 +55,8 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; font-
 
 @media print {
   .no-imprimir { display: none !important; }
-  html, body { background: white; }
+  html, body { background: white; color: #000; }
+  .tarjeta { background: white; color: #000; }
   .tarjeta { border-color: #999; break-inside: avoid; }
 }
 
@@ -58,11 +66,11 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; font-
 .resplandor { position: relative; isolation: isolate; }
 .resplandor::before {
   content: ""; position: absolute; z-index: -1; inset: -40px -10% auto; height: 320px; pointer-events: none;
-  background: radial-gradient(60% 60% at 50% 30%, rgba(0, 122, 255, .14), rgba(0, 122, 255, 0) 70%);
+  background: radial-gradient(60% 60% at 50% 30%, rgba(241, 96, 1, .22), rgba(193, 8, 1, 0) 70%);
 }
 .fila-tramite .chevron { transition: transform 180ms var(--ease-salida); }
 @media (hover: hover) and (pointer: fine) {
-  .fila-tramite:hover { background: #f7f7fa; }
+  .fila-tramite:hover { background: var(--color-superficie-alta); }
   .fila-tramite:hover .chevron { transform: translateX(3px); }
 }
 @media (prefers-reduced-motion: reduce) {

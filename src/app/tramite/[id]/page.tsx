@@ -59,9 +59,9 @@ export default async function PaginaTramite({ params, searchParams }: { params: 
             {PASOS.map((p, i) => (
               <li key={p.id}>
                 <Link href={`?paso=${p.id}`} aria-current={paso === p.id ? "step" : undefined}
-                  className={`flex min-h-11 items-center justify-between gap-2 rounded-lg px-3 text-sm font-medium ${paso === p.id ? "bg-tinta text-white" : "hover:bg-white"}`}>
+                  className={`flex min-h-11 items-center justify-between gap-2 rounded-lg px-3 text-sm font-medium ${paso === p.id ? "bg-marca text-papel" : "hover:bg-superficie"}`}>
                   <span>{i + 1}. {p.titulo}</span>
-                  {conteo[p.id] ? <span className={`rounded-full px-2 text-xs ${paso === p.id ? "bg-white/20" : "bg-linea/60"}`}>{conteo[p.id]}</span> : null}
+                  {conteo[p.id] ? <span className={`rounded-full px-2 text-xs ${paso === p.id ? "bg-papel/20" : "bg-linea/60"}`}>{conteo[p.id]}</span> : null}
                 </Link>
               </li>
             ))}
@@ -152,7 +152,7 @@ export default async function PaginaTramite({ params, searchParams }: { params: 
             </div>
 
             <div className="tarjeta p-5">
-              <h3 className="font-bold">Siguiente paso oficial (fuera de LegacyArchive)</h3>
+              <h3 className="font-bold">Siguiente paso oficial (fuera de Lazô)</h3>
               <ol className="mt-2 list-decimal space-y-1 pl-5 text-sm">{t.pasos_oficiales.map((p) => <li key={p.texto}>{p.texto}</li>)}</ol>
               <a href={t.canal_oficial_url} target="_blank" rel="noreferrer" className="boton boton-secundario boton-chico mt-3">Abrir canal oficial <ExternalLink aria-hidden className="size-4" /></a>
             </div>
@@ -160,7 +160,7 @@ export default async function PaginaTramite({ params, searchParams }: { params: 
             {t.id === "rm-comerciante-empresa" && (
               <div className="tarjeta border-dashed p-5">
                 <h3 className="flex items-center gap-2 font-bold"><FileUp aria-hidden className="size-5 text-marca" /> Etapa posterior: documentos obtenidos después</h3>
-                <p className="mt-1 text-sm">Para continuar con {otro.nombre_corto}, carga la patente y la constancia de RTU que obtuviste por los canales oficiales. En la demo son archivos sintéticos: LegacyArchive no los emite ni los verifica.</p>
+                <p className="mt-1 text-sm">Para continuar con {otro.nombre_corto}, carga la patente y la constancia de RTU que obtuviste por los canales oficiales. En la demo son archivos sintéticos: Lazô no los emite ni los verifica.</p>
                 <Link href="/expediente#documentos" className="boton boton-secundario boton-chico mt-3">Cargar documentos obtenidos previamente</Link>
               </div>
             )}

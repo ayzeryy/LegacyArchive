@@ -91,7 +91,7 @@ export function FilaPendiente({ r, procesoId, sugerencias }: { r: EvaluacionRequ
             <div className="mt-3 grid gap-2">
               {req.vigencia.tipo === "condicion_sin_plazo" && (
                 <label className="flex items-start gap-2 text-sm"><input type="checkbox" className="mt-1 accent-marca" checked={declara} onChange={(e) => setDeclara(e.target.checked)} />
-                  Declaro que cumple la condición «{req.vigencia.texto}». Entiendo que LegacyArchive no lo verifica.</label>
+                  Declaro que cumple la condición «{req.vigencia.texto}». Entiendo que Lazô no lo verifica.</label>
               )}
               <button className="boton boton-primario boton-chico justify-self-start" disabled={ocupado || (req.vigencia.tipo === "condicion_sin_plazo" && !declara)}
                 onClick={() => ejecutar("/api/documentos/confirmar", { procesoId, documentoId: r.documento!.id, motivo: req.vigencia.tipo === "condicion_sin_plazo" ? `La persona declara: ${req.vigencia.texto}` : "" })}>

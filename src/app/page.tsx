@@ -30,7 +30,7 @@ export default function Inicio() {
   });
   return (
     <div className="resplandor flex min-h-[60dvh] flex-col items-center pt-4 sm:pt-12">
-      <h1 className="entrada text-center text-[34px] font-bold leading-tight tracking-tight sm:text-5xl">¿Qué trámite deseas hacer hoy?</h1>
+      <h1 className="entrada texto-degradado text-center text-[34px] font-bold leading-tight tracking-tight sm:text-5xl">¿Qué trámite deseas hacer hoy?</h1>
       <p style={{ ["--retraso" as string]: "80ms" }} className="entrada mt-3 max-w-xl text-center text-lg text-tinta-suave">Escribe lo que necesitas. Te pedimos solo lo que falta.</p>
       <div style={{ ["--retraso" as string]: "160ms" }} className="entrada mt-8 w-full">
         <Buscador tramites={tramites} />

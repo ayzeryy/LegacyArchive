@@ -7,7 +7,7 @@
 
 ## 0:25–0:50 · Importar y normalizar
 - Escribe «negocio» en el buscador → Registro Mercantil → «Empezar este trámite» → «Cargar caso de demostración».
-- «Un CSV de 2019 en Windows-1252 y un JSON de 2025. LegacyArchive los lleva a un modelo común y guarda de dónde salió cada valor.»
+- «Un CSV de 2019 en Windows-1252 y un JSON de 2025. Lazô los lleva a un modelo común y guarda de dónde salió cada valor.»
 - Señala: «Esta persona se llama casi igual pero tiene otro CUI: **no se vincula por nombre**. Y este registro tiene la misma referencia y otro CUI: queda bloqueado.»
 
 ## 0:50–1:20 · Revisar y resolver

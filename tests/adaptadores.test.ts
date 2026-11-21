@@ -115,3 +115,41 @@ describe("adaptador JSON de exportación", () => {
     expect(res.ok).toBe(false);
   });
 });
+
+describe("adaptador DBF heredado", () => {
+  const r = leerFuente("padron_antiguo_2012.dbf", muestra("padron_antiguo_2012.dbf"));
+
+  it("lee la tabla dBASE, ignora el registro borrado y decodifica Windows-1252", () => {
+    if (!r.ok) throw new Error(r.error);
+    expect(r.formato).toBe("dbf_heredado");
+    expect(r.totalFilas).toBe(2);
+    expect(r.errores).toEqual([]);
+    const maria = r.registros[0];
+    expect(maria.refExpediente).toBe("LA-DEMO-001");
+    expect(maria.cui).toBe("3021456780108");
+    expect(maria.nit).toBe("8451273-6");
+    const objeto = maria.valores.find((v) => v.concepto === "empresa.objeto");
+    expect(objeto?.valor).toBe("VENTA AL POR MENOR DE TEXTILES TÍPICOS");
+    expect(objeto?.campoOrigen).toBe("ACT_ECO");
+    expect(maria.valores.find((v) => v.concepto === "persona.telefono")?.fechaDato).toBe("2012-05-08");
+    expect(maria.valores.some((v) => v.valor === "REGISTRO BORRADO")).toBe(false);
+  });
+
+  it("CUI y NIT siguen separados y no se completan entre sí", () => {
+    if (!r.ok) throw new Error(r.error);
+    const m = r.registros[0];
+    expect(m.valores.find((v) => v.concepto === "persona.cui")?.campoOrigen).toBe("DPI_NO");
+    expect(m.valores.find((v) => v.concepto === "persona.nit")?.campoOrigen).toBe("NIT_CONT");
+  });
+
+  it("rechaza un DBF dañado con un mensaje claro", () => {
+    const res = leerFuente("roto.dbf", new Uint8Array([3, 0, 0, 0, 5]));
+    expect(res.ok).toBe(false);
+  });
+
+  it("explica que MDB aún no se lee", () => {
+    const res = leerFuente("datos.mdb", new Uint8Array([0]));
+    expect(res.ok).toBe(false);
+    if (!res.ok) expect(res.error).toMatch(/Access/);
+  });
+});

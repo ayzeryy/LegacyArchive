@@ -178,7 +178,7 @@ export function evaluarProceso(e: EntradaMotor): EvaluacionProceso {
       explicacion = "Lo revisaste. No implica validación institucional.";
     } else if (r.vigencia.tipo === "condicion_sin_plazo") {
       estado = "por_confirmar";
-      explicacion = `La fuente pide: «${r.vigencia.texto}», sin plazo publicado. Solo tú puedes declararlo; LegacyArchive no lo verifica.`;
+      explicacion = `La fuente pide: «${r.vigencia.texto}», sin plazo publicado. Solo tú puedes declararlo; Lazô no lo verifica.`;
     } else {
       estado = "disponible";
       explicacion = "Documento aportado. Revisa que sea el correcto.";

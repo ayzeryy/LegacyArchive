@@ -1,8 +1,8 @@
-# LegacyArchive — demo Guatemala
+# Lazô — demo Guatemala
 
 > Normalizamos los requisitos institucionales y reutilizamos la información de la persona para preparar expedientes con menos repetición.
 
-María, una comerciante individual **ficticia**, prepara dos expedientes relacionados: la inscripción de comerciante individual y empresa ante el **Registro Mercantil** y, después, la **inscripción patronal de persona individual ante el IGSS**. LegacyArchive lee dos fuentes con estructuras incompatibles, conserva el origen de cada dato, muestra conflictos y faltantes, y al abrir el segundo trámite propone la información compatible sin volver a escribirla.
+María, una comerciante individual **ficticia**, prepara dos expedientes relacionados: la inscripción de comerciante individual y empresa ante el **Registro Mercantil** y, después, la **inscripción patronal de persona individual ante el IGSS**. Lazô lee dos fuentes con estructuras incompatibles, conserva el origen de cada dato, muestra conflictos y faltantes, y al abrir el segundo trámite propone la información compatible sin volver a escribirla.
 
 El resultado es un expediente descargable para continuar por el canal oficial. **No es una inscripción presentada ni aprobada.** Todos los datos y documentos son sintéticos.
 
@@ -66,7 +66,7 @@ Resultado de la última ejecución (2026-11-21): 35/35 pruebas, build correcto y
 | Capa | Archivos |
 |---|---|
 | Modelo común y normalización | `src/domain/conceptos.ts`, `normalizar.ts` |
-| Adaptadores de solo lectura | `src/domain/adaptadores.ts` (CSV heredado, JSON de exportación, validación Zod) |
+| Adaptadores de solo lectura | `src/domain/adaptadores.ts` (CSV y DBF heredados, JSON de exportación, validación Zod). La muestra DBF sintética se regenera con `node scripts/generar-dbf.mjs`. MDB (Access) aún no se lee: la app pide exportarlo a DBF o CSV. |
 | Vinculación | `src/domain/vinculacion.ts`: referencia de expediente + CUI/NIT exactos; nunca por nombre |
 | Motor de requisitos | `src/domain/motor.ts`: existencia, autorización, vigencia y equivalencia exacta |
 | Catálogo público versionado | `catalog/catalogo.json` (fuentes oficiales y fecha de revisión) |

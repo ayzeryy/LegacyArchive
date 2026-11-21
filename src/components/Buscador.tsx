@@ -26,7 +26,7 @@ export function Buscador({ tramites }: { tramites: OpcionTramite[] }) {
   return (
     <div className="mx-auto w-full max-w-2xl">
       <label htmlFor="buscar-tramite" className="sr-only">Busca tu trámite</label>
-      <div className="flex items-center gap-3 rounded-2xl bg-white px-4 shadow-[0_1px_3px_rgba(0,0,0,.08)] ring-1 ring-black/5 transition-shadow duration-200 focus-within:ring-2 focus-within:ring-marca focus-within:shadow-[0_4px_20px_rgba(0,122,255,.15)]">
+      <div className="flex items-center gap-3 rounded-full bg-superficie px-5 ring-1 ring-borde transition-shadow duration-200 focus-within:ring-2 focus-within:ring-marca focus-within:shadow-[0_4px_20px_rgba(241,96,1,.25)]">
         <Search aria-hidden className="size-5 shrink-0 text-tinta-suave" />
         <input
           id="buscar-tramite"
@@ -48,7 +48,7 @@ export function Buscador({ tramites }: { tramites: OpcionTramite[] }) {
         {q.trim() ? `${resultados.length} resultado${resultados.length === 1 ? "" : "s"}` : "Trámites disponibles"}
       </p>
       {resultados.length > 0 ? (
-        <ul className="overflow-hidden rounded-2xl bg-white shadow-[0_1px_3px_rgba(0,0,0,.06)]">
+        <ul className="overflow-hidden rounded-2xl bg-superficie shadow-[0_1px_3px_rgba(0,0,0,.06)]">
           {resultados.map((t, i) => (
             <li key={t.id} className={i > 0 ? "border-t border-linea ml-4" : ""}>
               <Link href={`/tramite/${t.id}/inicio`} className={`fila-tramite flex min-h-16 items-center gap-3 py-3 pr-4 ${i > 0 ? "" : "pl-4"} transition-colors duration-150 active:bg-papel`}>
@@ -63,7 +63,7 @@ export function Buscador({ tramites }: { tramites: OpcionTramite[] }) {
           ))}
         </ul>
       ) : (
-        <div className="rounded-2xl bg-white p-5 text-center">
+        <div className="rounded-2xl bg-superficie p-5 text-center">
           <p className="font-semibold">No encontramos ese trámite</p>
           <p className="mt-1 text-[15px] text-tinta-suave">Esta demo incluye la inscripción en el Registro Mercantil y la inscripción patronal del IGSS. Prueba con «negocio» o «IGSS».</p>
         </div>

@@ -1,4 +1,4 @@
-# LegacyArchive — instrucciones para Claude
+# Lazô — instrucciones para Claude
 
 Demo de hackathon (track «Legacy», Guatemala). Una comerciante individual ficticia (María) prepara dos expedientes —Registro Mercantil e inscripción patronal del IGSS— reutilizando datos de dos fuentes sintéticas incompatibles. Entrega: 2026-11-21, 3:00 p. m. (hora de Guatemala).
 

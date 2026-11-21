@@ -27,7 +27,7 @@ export function asegurarExpediente() {
   const db = getDb();
   db.prepare("INSERT OR IGNORE INTO expedientes (id, ref, creado_en) VALUES (?, ?, ?)").run(EXPEDIENTE_ID, EXPEDIENTE_REF, ahora());
   for (const [id, nombre, tipo] of [
-    ["captura", "Escrito por la persona en LegacyArchive", "captura_usuario"],
+    ["captura", "Escrito por la persona en Lazô", "captura_usuario"],
     ["respuesta", "Respuestas al iniciar el trámite", "respuesta_inicial"],
   ] as const) {
     db.prepare("INSERT OR IGNORE INTO fuentes (id, expediente_id, nombre_archivo, tipo, importado_en) VALUES (?, ?, ?, ?, ?)").run(id, EXPEDIENTE_ID, nombre, tipo, ahora());
@@ -94,7 +94,7 @@ export interface FuenteImportada {
 export function fuentesImportadas(): FuenteImportada[] {
   asegurarExpediente();
   const db = getDb();
-  const filas = db.prepare("SELECT * FROM fuentes WHERE expediente_id = ? AND tipo IN ('csv_heredado','json_exportacion') ORDER BY importado_en").all(EXPEDIENTE_ID) as Fila[];
+  const filas = db.prepare("SELECT * FROM fuentes WHERE expediente_id = ? AND tipo IN ('csv_heredado','dbf_heredado','json_exportacion') ORDER BY importado_en").all(EXPEDIENTE_ID) as Fila[];
   return filas.map((f) => ({
     id: String(f.id), nombreArchivo: String(f.nombre_archivo), tipo: f.tipo as TipoFuente, importadoEn: String(f.importado_en),
     totalFilas: Number(f.total_filas ?? 0), vinculados: Number(f.vinculados ?? 0), errores: JSON.parse(String(f.errores_json ?? "[]")),
@@ -276,7 +276,7 @@ function registrarValorPropio(procesoId: string, tramiteId: string, concepto: st
   const ya = valores().find((x) => x.concepto === concepto && claveComparacion(concepto, x.valor) === claveComparacion(concepto, valor));
   if (!ya) {
     db.prepare("INSERT INTO valores (id, expediente_id, concepto, valor, valor_original, campo_origen, fecha_dato, importado_en, fuente_id, proceso_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)")
-      .run(randomUUID(), EXPEDIENTE_ID, concepto, valor, valor, fuenteId === "captura" ? "Formulario de LegacyArchive" : "Pregunta inicial", ahora().slice(0, 10), ahora(), fuenteId, procesoId);
+      .run(randomUUID(), EXPEDIENTE_ID, concepto, valor, valor, fuenteId === "captura" ? "Formulario de Lazô" : "Pregunta inicial", ahora().slice(0, 10), ahora(), fuenteId, procesoId);
   }
   const claves = [...new Set(valores().filter((x) => x.concepto === concepto).map((x) => claveComparacion(concepto, x.valor)))];
   insertarConfirmacion({ objetivo: concepto, valorClave: claveComparacion(concepto, valor), considerados: claves, accion, motivo, procesoId, tramiteId });

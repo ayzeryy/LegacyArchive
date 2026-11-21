@@ -1,7 +1,8 @@
-export type TipoFuente = "csv_heredado" | "json_exportacion" | "captura_usuario" | "respuesta_inicial";
+export type TipoFuente = "csv_heredado" | "dbf_heredado" | "json_exportacion" | "captura_usuario" | "respuesta_inicial";
 
 export const ETIQUETA_FUENTE: Record<TipoFuente, string> = {
   csv_heredado: "Sistema antiguo (CSV)",
+  dbf_heredado: "Sistema antiguo (DBF)",
   json_exportacion: "Exportación del gestor (JSON)",
   captura_usuario: "Escrito por la persona",
   respuesta_inicial: "Respuesta al iniciar el trámite",

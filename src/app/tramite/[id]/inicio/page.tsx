@@ -34,13 +34,14 @@ export default async function InicioTramite({ params }: { params: Promise<{ id: 
 
       <section aria-labelledby="t-video">
         <h2 id="t-video" className="sr-only">Video explicativo</h2>
-        <div className="relative grid aspect-video w-full max-w-full place-items-center overflow-hidden rounded-2xl bg-tinta text-white">
+        <div className="relative grid aspect-video w-full max-w-full place-items-center overflow-hidden rounded-3xl border border-linea bg-superficie text-tinta">
+          <div aria-hidden className="degradado-lazo absolute inset-x-0 top-0 h-1.5" />
           <div className="flex flex-col items-center gap-2 px-6 text-center">
-            <PlayCircle aria-hidden className="size-16 opacity-90" strokeWidth={1.25} />
+            <PlayCircle aria-hidden className="size-16 text-marca" strokeWidth={1.25} />
             <p className="text-lg font-semibold">Cómo hacer este trámite</p>
-            <p className="text-sm text-white/70">Video de ejemplo pendiente de grabar. No es un video oficial.</p>
+            <p className="text-sm text-tinta-suave">Video de ejemplo pendiente de grabar. No es un video oficial.</p>
           </div>
-          <span className="absolute left-3 top-3 rounded-full bg-white/15 px-2.5 py-1 text-xs font-semibold">Ejemplo</span>
+          <span className="absolute left-3 top-3 rounded-full bg-marca px-2.5 text-papel py-1 text-xs font-semibold">Ejemplo</span>
         </div>
         {info && (
           <ol className="mt-4 space-y-2">
@@ -54,7 +55,7 @@ export default async function InicioTramite({ params }: { params: Promise<{ id: 
         )}
       </section>
 
-      <section className="rounded-2xl bg-white p-5 sm:p-6" aria-labelledby="t-preguntas">
+      <section className="rounded-2xl bg-superficie p-5 sm:p-6" aria-labelledby="t-preguntas">
         <h2 id="t-preguntas" className="mb-4 text-xl font-bold">{abierto ? "Ya empezaste este trámite" : "Antes de empezar"}</h2>
         <IniciarTramite tramiteId={t.id} preguntaInscrita={t.id === "rm-comerciante-empresa"} abierto={abierto} />
       </section>

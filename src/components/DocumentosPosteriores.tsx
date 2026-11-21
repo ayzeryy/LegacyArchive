@@ -18,10 +18,10 @@ export function DocumentosPosteriores() {
       if (!archivo) return;
       const f = new FormData();
       f.set("archivo", archivo); f.set("tipo", tipo); f.set("fechaEmision", fecha); f.set("sintetico", "si");
-      f.set("nota", "Representa un documento obtenido previamente por la persona. LegacyArchive no lo emitió ni lo verificó.");
+      f.set("nota", "Representa un documento obtenido previamente por la persona. Lazô no lo emitió ni lo verificó.");
       if (await ejecutar("/api/documentos", f)) { setOk(`${TIPOS_DOCUMENTO[tipo as keyof typeof TIPOS_DOCUMENTO]} agregado al expediente.`); setArchivo(null); (e.target as HTMLFormElement).reset(); setPrevio(false); }
     }}>
-      <p className="rounded-lg bg-aviso-fondo px-3 py-2 text-sm text-aviso">Estos archivos representan documentos que la persona <strong>obtuvo previamente</strong> por los canales oficiales. LegacyArchive no los emitió y no verifica su autenticidad.</p>
+      <p className="rounded-lg bg-aviso-fondo px-3 py-2 text-sm text-aviso">Estos archivos representan documentos que la persona <strong>obtuvo previamente</strong> por los canales oficiales. Lazô no los emitió y no verifica su autenticidad.</p>
       <label className="text-sm font-medium" htmlFor="tipo-doc">Tipo de documento</label>
       <select id="tipo-doc" className="campo sm:max-w-sm" value={tipo} onChange={(e) => setTipo(e.target.value)}>
         {(["patente_empresa", "constancia_rtu", "dpi"] as const).map((t) => <option key={t} value={t}>{TIPOS_DOCUMENTO[t]}</option>)}

@@ -55,7 +55,7 @@ export default function PaginaCatalogo() {
               ))}
             </ul>
           </div>
-          <ul className="divide-y divide-linea rounded-xl border border-linea bg-white">
+          <ul className="divide-y divide-linea rounded-xl border border-linea bg-superficie">
             {t.requisitos.map((r) => (
               <li key={r.id} className="flex flex-wrap items-start justify-between gap-2 p-3 text-sm">
                 <div className="min-w-0">

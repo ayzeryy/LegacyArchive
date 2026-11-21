@@ -36,18 +36,18 @@ export function PanelFuentes({ procesoId, fuentes }: { procesoId: string; fuente
     <div className="space-y-5">
       <div className="tarjeta p-5">
         <h2 className="text-lg font-bold">Importa tus fuentes</h2>
-        <p className="mt-1 text-sm text-tinta-suave">Admite el CSV del sistema antiguo (Windows-1252, separado por «;») y el JSON del gestor actual. Solo se leen: los archivos originales no se modifican.</p>
+        <p className="mt-1 text-sm text-tinta-suave">Admite el CSV o el DBF (dBASE/FoxPro) del sistema antiguo, en Windows-1252, y el JSON del gestor actual. Los archivos de Access (.mdb) todavía no se leen. Solo se leen: los archivos originales no se modifican.</p>
         <div className="mt-4 flex flex-col gap-2 sm:flex-row">
           <button className="boton boton-primario" disabled={ocupado} onClick={async () => { setAviso(null); const r = await ejecutar("/api/importar-demo", { procesoId }); if (r) { quedarse(); setAviso("Caso de demostración cargado: 2 archivos sintéticos."); } }}>
             <Sparkles aria-hidden className="size-4" /> {ocupado ? "Importando…" : "Cargar caso de demostración"}
           </button>
           <label className="boton boton-secundario cursor-pointer">
             <Upload aria-hidden className="size-4" /> Elegir archivos
-            <input ref={input} type="file" accept=".csv,.json" multiple className="sr-only" onChange={(e) => subir(e.target.files)} />
+            <input ref={input} type="file" accept=".csv,.dbf,.json,.mdb" multiple className="sr-only" onChange={(e) => subir(e.target.files)} />
           </label>
         </div>
         <p className="mt-3 text-xs text-tinta-suave">
-          Archivos de muestra: <a className="underline" href="/api/muestras/sistema_antiguo_contribuyentes.csv">CSV heredado</a> · <a className="underline" href="/api/muestras/exportacion_gestor_2025.json">JSON del gestor</a> · <a className="underline" href="/api/muestras/importacion_invalida.csv">CSV inválido (para probar errores)</a>
+          Archivos de muestra: <a className="underline" href="/api/muestras/sistema_antiguo_contribuyentes.csv">CSV heredado</a> · <a className="underline" href="/api/muestras/padron_antiguo_2012.dbf">DBF heredado</a> · <a className="underline" href="/api/muestras/exportacion_gestor_2025.json">JSON del gestor</a> · <a className="underline" href="/api/muestras/importacion_invalida.csv">CSV inválido (para probar errores)</a>
         </p>
         <div aria-live="polite">{aviso && <p className="aparecer mt-3 rounded-lg bg-ok-fondo px-3 py-2 text-sm text-ok">{aviso}</p>}</div>
         <MensajeError error={error} />
@@ -58,7 +58,7 @@ export function PanelFuentes({ procesoId, fuentes }: { procesoId: string; fuente
           {fuentes.map((f) => (
             <li key={f.id} className="tarjeta p-4">
               <div className="flex flex-wrap items-center gap-2">
-                {f.tipo === "csv_heredado" ? <FileSpreadsheet aria-hidden className="size-5 text-marca" /> : <FileJson aria-hidden className="size-5 text-marca" />}
+                {f.tipo === "csv_heredado" || f.tipo === "dbf_heredado" ? <FileSpreadsheet aria-hidden className="size-5 text-marca" /> : <FileJson aria-hidden className="size-5 text-marca" />}
                 <span className="font-semibold">{f.nombreArchivo}</span>
                 <span className="text-sm text-tinta-suave">· {ETIQUETA_FUENTE[f.tipo]} · {fechaHora(f.importadoEn)}</span>
               </div>
