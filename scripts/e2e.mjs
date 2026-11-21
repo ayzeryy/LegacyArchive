@@ -5,11 +5,12 @@ import { mkdtempSync, mkdirSync, readFileSync } from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { createRequire } from "node:module";
+import { fileURLToPath } from "node:url";
 const { chromium } = createRequire(import.meta.url)("playwright");
 
 const PUERTO = 3123;
 const BASE = `http://localhost:${PUERTO}`;
-const raiz = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
+const raiz = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const capturas = process.env.CAPTURAS_DIR || path.join(raiz, "docs", "capturas");
 const ESCALA = Number(process.env.ESCALA || 1);
 const EXT = process.env.FORMATO === "jpg" ? "jpg" : "png";
@@ -17,7 +18,7 @@ mkdirSync(capturas, { recursive: true });
 const db = path.join(mkdtempSync(path.join(os.tmpdir(), "la-e2e-")), "e2e.db");
 
 function iniciar() {
-  const p = spawn(process.execPath, [path.join(raiz, "node_modules", "next", "dist", "bin", "next"), "start", "-p", String(PUERTO)], { cwd: raiz, env: { ...process.env, LEGACYARCHIVE_DB_PATH: db }, stdio: "pipe" });
+  const p = spawn(process.execPath, [path.join(raiz, "node_modules", "next", "dist", "bin", "next"), "start", "-p", String(PUERTO)], { cwd: raiz, env: { ...process.env, LEGACYARCHIVE_DB_PATH: db, TURSO_DATABASE_URL: "", TURSO_AUTH_TOKEN: "", VERCEL: "" }, stdio: "pipe" });
   return new Promise((ok, mal) => {
     const t = setTimeout(() => mal(new Error("El servidor no inició")), 30000);
     p.stdout.on("data", (d) => { if (String(d).includes("Ready")) { clearTimeout(t); ok(p); } });
@@ -30,7 +31,7 @@ const ok = (m) => { pasos.push(m); console.log("✓", m); };
 function afirmar(c, m) { if (!c) throw new Error("Falló: " + m); ok(m); }
 
 let servidor = await iniciar();
-const navegador = await chromium.launch();
+const navegador = await chromium.launch({ channel: process.env.PLAYWRIGHT_CHANNEL || undefined });
 const ctx = await navegador.newContext({ viewport: { width: 1280, height: 860 }, deviceScaleFactor: ESCALA, acceptDownloads: true });
 const page = await ctx.newPage();
 page.setDefaultTimeout(10000);

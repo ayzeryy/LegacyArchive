@@ -3,6 +3,9 @@ import { cerrarDb } from "@/server/db";
 import { extraerConCroma, extracciones } from "@/server/croma";
 
 beforeEach(() => {
+  vi.stubEnv("VERCEL", "");
+  vi.stubEnv("TURSO_DATABASE_URL", "");
+  vi.stubEnv("TURSO_AUTH_TOKEN", "");
   vi.stubEnv("LEGACYARCHIVE_DB_PATH", ":memory:");
   vi.stubEnv("CROMA_API_KEY", "clave-de-prueba");
 });
@@ -30,6 +33,6 @@ describe("respuesta de Croma y persistencia", () => {
     const extraccion = await extraerConCroma("rm-comerciante-empresa", "https://example.org/fuente");
     expect(extraccion.ok).toBe(false);
     expect(extraccion.error).toContain("rate_limit_exceeded");
-    expect(extracciones()[0].requestId).toBe("req-error");
+    expect((await extracciones())[0].requestId).toBe("req-error");
   });
 });

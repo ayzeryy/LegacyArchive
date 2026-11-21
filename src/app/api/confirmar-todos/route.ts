@@ -5,13 +5,13 @@ import { confirmarDato, ErrorDemo, evaluar, procesos } from "@/server/repo";
 export async function POST(req: Request) {
   return responder(async () => {
     const { procesoId } = z.object({ procesoId: z.string() }).parse(await req.json());
-    const p = procesos().find((x) => x.id === procesoId);
+    const p = (await procesos()).find((x) => x.id === procesoId);
     if (!p) throw new ErrorDemo("Proceso no encontrado.", 404);
-    const ev = evaluar(p.tramiteId)!;
+    const ev = (await evaluar(p.tramiteId))!;
     let n = 0;
     for (const r of ev.evaluacion.requisitos) {
       if (r.aplica !== false && r.requisito.tipo === "dato" && r.estado === "disponible" && r.elegida) {
-        confirmarDato(procesoId, r.requisito.concepto, r.elegida.clave, "Revisado por la persona (confirmación en bloque de datos sin conflicto).");
+        await confirmarDato(procesoId, r.requisito.concepto, r.elegida.clave, "Revisado por la persona (confirmación en bloque de datos sin conflicto).");
         n++;
       }
     }

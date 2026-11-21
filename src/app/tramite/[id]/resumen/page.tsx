@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 export default async function Resumen({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const d = evaluar(id);
+  const d = (await evaluar(id));
   if (!d) notFound();
   const { tramite: t, evaluacion: ev } = d;
   return (

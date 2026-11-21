@@ -10,17 +10,15 @@ export const dynamic = "force-dynamic";
 
 const ACCION: Record<string, string> = { confirmar: "Confirmó", resolver_conflicto: "Resolvió una diferencia", corregir: "Corrigió", capturar: "Escribió", confirmar_documento: "Confirmó un documento", autorizar_reutilizacion: "Autorizó reutilizar el expediente" };
 
-export default function Expediente() {
-  const vals = valores();
-  const docs = documentos();
-  const confs = confirmaciones();
+export default async function Expediente() {
+  const [vals, docs, confs] = await Promise.all([valores(), documentos(), confirmaciones()]);
   const conceptos = (Object.keys(CONCEPTOS) as Concepto[]).filter((c) => vals.some((v) => v.concepto === c));
   return (
     <div className="space-y-10">
       <header className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-3xl font-bold">Mi expediente</h1>
-          <p className="text-tinta-suave">Datos privados de María (sintéticos), separados del catálogo público. Guardados en SQLite local.</p>
+          <p className="text-tinta-suave">Datos privados de María (sintéticos), separados del catálogo público. Guardados para reutilizarlos en tus trámites.</p>
         </div>
         <Reiniciar />
       </header>

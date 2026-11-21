@@ -12,6 +12,6 @@ const Entrada = z.object({
 export async function POST(req: Request) {
   return responder(async () => {
     const e = Entrada.parse(await req.json());
-    return { proceso: abrirProceso(e.tramiteId, e.tipoSolicitante, e) };
+    return { proceso: (await abrirProceso(e.tramiteId, e.tipoSolicitante, e)) };
   });
 }

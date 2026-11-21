@@ -21,7 +21,7 @@ export default async function InicioTramite({ params }: { params: Promise<{ id: 
   const { id } = await params;
   const t = tramite(id);
   if (!t) notFound();
-  const abierto = !!procesoPorTramite(id);
+  const abierto = !!(await procesoPorTramite(id));
   const info = EXPLICACION[id];
   return (
     <div className="mx-auto max-w-2xl space-y-6">

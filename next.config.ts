@@ -1,8 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // node:sqlite es un módulo nativo de Node; se usa solo en el servidor.
-  serverExternalPackages: [],
+  // Mantener el cliente y el driver local fuera del bundle del servidor.
+  serverExternalPackages: ["@libsql/client", "libsql"],
   poweredByHeader: false,
 };
 

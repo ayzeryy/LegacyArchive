@@ -8,7 +8,7 @@ El resultado es un expediente descargable para continuar por el canal oficial. *
 
 ## Iniciar
 
-Requiere Node.js 22.13 o superior (usa el SQLite nativo de Node).
+Requiere Node.js 22.13 o superior. En local conserva SQLite; en Vercel usa libSQL remoto (Turso).
 
 ```bash
 npm install
@@ -17,6 +17,12 @@ npm run dev                    # http://localhost:3000
 ```
 
 Para la presentación: `npm run build && npm start`. Antes de empezar, pulsa «Reiniciar la demo» en **Mi expediente**.
+
+## Desplegar en Vercel
+
+Consulta [docs/VERCEL.md](docs/VERCEL.md). Configura `TURSO_DATABASE_URL` y `TURSO_AUTH_TOKEN` como secretos del servidor antes de desplegar. La app usa una base **libSQL** remota y no guarda el expediente en `/tmp`. Las tablas se crean automáticamente. Sin las dos variables no se activa la persistencia en Vercel.
+
+El despliegue sigue siendo una demo compartida de un expediente, sin autenticación y solo con datos sintéticos. Las pruebas locales no sustituyen la prueba de conexión a tu base remota.
 
 ## Recorrido (≈ 3 minutos)
 
@@ -46,14 +52,16 @@ La presentación está en `presentacion/index.html` (ábrela en el navegador).
 
 | Variable | Uso |
 |---|---|
-| `LEGACYARCHIVE_DB_PATH` | Ruta del SQLite. Por defecto `data/legacyarchive.db` (fuera de git). |
+| `LEGACYARCHIVE_DB_PATH` | Solo local. Por defecto `data/legacyarchive.db` (fuera de git). |
+| `TURSO_DATABASE_URL` | URL libSQL remota. Obligatoria en Vercel. |
+| `TURSO_AUTH_TOKEN` | Token del servidor para la base remota. Obligatorio junto con la URL. |
 | `CROMA_API_KEY` | Opcional. Clave de Croma, solo en el servidor. Se crea en platform.usecroma.com. |
 | `CROMA_BASE_URL` | Opcional. Por defecto `https://api.croma.run`. |
 
 ## Verificaciones
 
 ```bash
-npm test        # 35 pruebas: adaptadores, vinculación, motor, catálogo y recorrido sobre SQLite
+npm test        # pruebas locales de dominio y persistencia; prueba remota opt-in en docs/VERCEL.md
 npm run lint    # TypeScript estricto
 npm run build
 npm run e2e     # recorrido completo en Chromium (Playwright) con los archivos de muestra
@@ -70,7 +78,7 @@ Resultado de la última ejecución (2026-11-21): 35/35 pruebas, build correcto y
 | Vinculación | `src/domain/vinculacion.ts`: referencia de expediente + CUI/NIT exactos; nunca por nombre |
 | Motor de requisitos | `src/domain/motor.ts`: existencia, autorización, vigencia y equivalencia exacta |
 | Catálogo público versionado | `catalog/catalogo.json` (fuentes oficiales y fecha de revisión) |
-| Expediente privado | `src/server/db.ts`, `repo.ts` (SQLite) |
+| Expediente privado | `src/server/db.ts`, `repo.ts` (SQLite local / libSQL remoto, consultas asíncronas) |
 | Exportación | `src/domain/exportar.ts` (JSON con procedencia) y `/tramite/[id]/resumen` (imprimible) |
 | Croma | `src/server/croma.ts`, `POST /api/croma`, página `/catalogo` |
 
@@ -89,4 +97,4 @@ Estados modelados: disponible, confirmado por la persona, en conflicto, faltante
 - Ninguna fuente publica plazos de vigencia para estos documentos; no se inventan. El RTU «ratificado» queda «por confirmar» hasta que la persona lo declara.
 - Un solo expediente y sin autenticación: solo para datos sintéticos.
 - Fuera de alcance: sociedades, sucursales, copropiedad completa, extranjeros, afiliación de trabajadores.
-- `node:sqlite` muestra un aviso «experimental» en la consola; es esperado.
+- La conexión remota necesita una base libSQL y sus secretos en Vercel; el fork no los aprovisiona automáticamente.

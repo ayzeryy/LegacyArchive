@@ -9,12 +9,12 @@ const ARCHIVOS = ["sistema_antiguo_contribuyentes.csv", "exportacion_gestor_2025
 export async function POST(req: Request) {
   return responder(async () => {
     const { procesoId } = z.object({ procesoId: z.string() }).parse(await req.json());
-    const ya = new Set(fuentesImportadas().map((f) => f.nombreArchivo));
+    const ya = new Set((await fuentesImportadas()).map((f) => f.nombreArchivo));
     const resultados = [];
     for (const nombre of ARCHIVOS) {
       if (ya.has(nombre)) continue;
       const bytes = new Uint8Array(readFileSync(path.join(process.cwd(), "muestras", nombre)));
-      resultados.push({ nombre, ...importarArchivo(nombre, bytes, procesoId) });
+      resultados.push({ nombre, ...(await importarArchivo(nombre, bytes, procesoId)) });
     }
     return { resultados };
   });

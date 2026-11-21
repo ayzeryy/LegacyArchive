@@ -6,9 +6,9 @@ import { catalogo } from "@/server/repo";
 
 export const dynamic = "force-dynamic";
 
-export default function PaginaCatalogo() {
+export default async function PaginaCatalogo() {
   const conCroma = cromaConfigurado();
-  const ext = extracciones();
+  const ext = (await extracciones());
   return (
     <div className="space-y-8">
       <header className="max-w-3xl">

@@ -7,6 +7,6 @@ const Entrada = z.object({ procesoId: z.string(), concepto: z.string(), valor: z
 export async function POST(req: Request) {
   return responder(async () => {
     const e = Entrada.parse(await req.json());
-    capturarDato(e.procesoId, e.concepto, e.valor, e.motivo);
+    await capturarDato(e.procesoId, e.concepto, e.valor, e.motivo);
   });
 }

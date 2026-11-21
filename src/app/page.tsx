@@ -16,9 +16,9 @@ const PALABRAS: Record<string, { resumen: string; palabras: string[] }> = {
   },
 };
 
-export default function Inicio() {
-  const tramites: OpcionTramite[] = catalogo.tramites.map((t) => {
-    const ev = procesoPorTramite(t.id) ? evaluar(t.id) : null;
+export default async function Inicio() {
+  const tramites: OpcionTramite[] = (await Promise.all(catalogo.tramites.map(async (t) => {
+    const ev = (await procesoPorTramite(t.id)) ? (await evaluar(t.id)) : null;
     return {
       id: t.id,
       nombre: t.nombre,
@@ -27,7 +27,7 @@ export default function Inicio() {
       palabras: PALABRAS[t.id]?.palabras ?? [],
       estado: ev ? `En curso · ${ev.evaluacion.resumen.preparados} de ${ev.evaluacion.resumen.aplicables} listos · ${ESTADO_SALIDA[ev.evaluacion.resumen.estadoExpediente]}` : null,
     };
-  });
+  })));
   return (
     <div className="resplandor flex min-h-[60dvh] flex-col items-center pt-4 sm:pt-12">
       <h1 className="entrada texto-degradado text-center text-[34px] font-bold leading-tight tracking-tight sm:text-5xl">¿Qué trámite deseas hacer hoy?</h1>

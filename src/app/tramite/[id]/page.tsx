@@ -26,10 +26,10 @@ export default async function PaginaTramite({ params, searchParams }: { params: 
   const { id } = await params;
   const { paso: pasoParam } = await searchParams;
   if (!tramite(id)) notFound();
-  const datos = evaluar(id);
+  const datos = (await evaluar(id));
   if (!datos) redirect("/");
   const { proceso, tramite: t, evaluacion: ev } = datos;
-  const fuentes = fuentesImportadas();
+  const fuentes = (await fuentesImportadas());
   const aplicables = ev.requisitos.filter((r) => r.aplica !== false);
   const paraRevisar = aplicables.filter((r) => r.requisito.tipo === "dato" && r.opciones.length > 0 && !r.capturadoAqui).sort((a, b) => Number(b.estado === "en_conflicto") - Number(a.estado === "en_conflicto"));
   const pendientes = ev.requisitos.filter((r) => r.requisito.tipo === "documento" || (r.requisito.tipo === "dato" && (r.opciones.length === 0 || r.capturadoAqui)));
@@ -40,9 +40,10 @@ export default async function PaginaTramite({ params, searchParams }: { params: 
   const pasoDefecto: Paso = !proceso.autorizado || fuentes.length === 0 ? "fuentes" : conflictos + disponibles > 0 ? "revisar" : faltan > 0 ? "pendientes" : "preparar";
   const paso: Paso = PASOS.some((p) => p.id === pasoParam) ? (pasoParam as Paso) : pasoDefecto;
   const otro = catalogo.tramites.find((x) => x.id !== t.id)!;
-  const todos = valores();
+  const todos = (await valores());
   const sugerenciasDe = (relacionados: string[] | undefined): Sugerencia[] =>
     (relacionados ?? []).flatMap((c) => agruparOpciones(c, todos).slice(0, 1).map((o) => ({ concepto: c, valor: o.valor, origen: ETIQUETA_FUENTE[o.procedencias[0].fuente.tipo] })));
+  const exportaciones = await exportacionesDe(proceso.id);
   const conteo: Record<Paso, number | null> = { fuentes: fuentes.length, revisar: conflictos + disponibles, pendientes: faltan, preparar: null };
 
   return (
@@ -136,7 +137,7 @@ export default async function PaginaTramite({ params, searchParams }: { params: 
                 <a href={`/api/exportar/${t.id}`} className="boton boton-primario"><Download aria-hidden className="size-4" /> Descargar expediente preparado</a>
                 <Link href={`/tramite/${t.id}/resumen`} className="boton boton-secundario"><Printer aria-hidden className="size-4" /> Resumen imprimible</Link>
               </div>
-              {exportacionesDe(proceso.id).length > 0 && <p className="mt-2 text-xs text-tinta-suave">Descargas registradas: {exportacionesDe(proceso.id).length}. Última: {exportacionesDe(proceso.id).at(-1)!.estado}.</p>}
+              {exportaciones.length > 0 && <p className="mt-2 text-xs text-tinta-suave">Descargas registradas: {exportaciones.length}. Última: {exportaciones.at(-1)!.estado}.</p>}
             </div>
 
             <div className="tarjeta p-5">
