@@ -51,3 +51,21 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; font-
   html, body { background: white; }
   .tarjeta { border-color: #999; break-inside: avoid; }
 }
+
+/* Entrada escalonada con desenfoque, inspirada en la portada de Linear. Solo en la pantalla principal (se ve una vez). */
+.entrada { animation: entrada 520ms var(--ease-salida) both; animation-delay: var(--retraso, 0ms); }
+@keyframes entrada { from { opacity: 0; transform: translateY(10px); filter: blur(6px); } }
+.resplandor { position: relative; isolation: isolate; }
+.resplandor::before {
+  content: ""; position: absolute; z-index: -1; inset: -40px -10% auto; height: 320px; pointer-events: none;
+  background: radial-gradient(60% 60% at 50% 30%, rgba(0, 122, 255, .14), rgba(0, 122, 255, 0) 70%);
+}
+.fila-tramite .chevron { transition: transform 180ms var(--ease-salida); }
+@media (hover: hover) and (pointer: fine) {
+  .fila-tramite:hover { background: #f7f7fa; }
+  .fila-tramite:hover .chevron { transform: translateX(3px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .entrada { animation: aparecer-suave 200ms ease both; animation-delay: 0ms; }
+  @keyframes aparecer-suave { from { opacity: 0; } }
+}
