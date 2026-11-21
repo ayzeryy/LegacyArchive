@@ -20,7 +20,7 @@ Para la presentación: `npm run build && npm start`. Antes de empezar, pulsa «R
 
 ## Recorrido (≈ 3 minutos)
 
-1. **Trámites** → Registro Mercantil → persona individual → «Empezar este trámite».
+1. En «¿Qué trámite deseas hacer hoy?» escribe «negocio» → abre el Registro Mercantil → responde las preguntas → «Empezar este trámite».
 2. **Reutilizar expediente** → «Cargar caso de demostración» (o sube los archivos de `muestras/`). Observa: un nombre parecido con otro CUI no se vincula, y un registro con la misma referencia pero CUI distinto queda bloqueado.
 3. **Revisar información** → la dirección de la empresa está **en conflicto** (CSV 2019 vs. JSON 2025). Elige el valor, escribe el motivo y resuelve. Confirma los demás datos.
 4. **Completar pendientes** → estado civil, fecha de inicio, empleados a contratar y copia del DPI (`muestras/documentos/dpi_MUESTRA.pdf`). Los comprobantes de pago quedan **faltantes**.
@@ -30,6 +30,8 @@ Para la presentación: `npm run build && npm start`. Antes de empezar, pulsa «R
 8. Completa la cantidad de trabajadores (se sugiere «empleados a contratar» como dato relacionado, no equivalente) y declara que el RTU está ratificado.
 9. Descarga: **«Preparado para revisión según el catálogo de la demo»**.
 10. Detén y vuelve a iniciar el servidor: todo se conserva en `data/legacyarchive.db`.
+
+La presentación está en `presentacion/index.html` (ábrela en el navegador).
 
 ## Archivos sintéticos
 
@@ -51,13 +53,13 @@ Para la presentación: `npm run build && npm start`. Antes de empezar, pulsa «R
 ## Verificaciones
 
 ```bash
-npm test        # 32 pruebas: adaptadores, vinculación, motor, catálogo y recorrido sobre SQLite
+npm test        # 35 pruebas: adaptadores, vinculación, motor, catálogo y recorrido sobre SQLite
 npm run lint    # TypeScript estricto
 npm run build
 npm run e2e     # recorrido completo en Chromium (Playwright) con los archivos de muestra
 ```
 
-Resultado de la última ejecución (2026-11-21): 32/32 pruebas, build correcto y **18/18 comprobaciones del recorrido en navegador**, incluido reiniciar el servidor y una pantalla de 390 px sin desplazamiento horizontal. Capturas en `docs/capturas/`.
+Resultado de la última ejecución (2026-11-21): 35/35 pruebas, build correcto y **19/19 comprobaciones del recorrido en navegador**, incluido reiniciar el servidor y una pantalla de 390 px sin desplazamiento horizontal. Capturas en `docs/capturas/`.
 
 ## Cómo está hecho
 
@@ -81,7 +83,7 @@ Estados modelados: disponible, confirmado por la persona, en conflicto, faltante
 
 ## Limitaciones e integraciones pendientes
 
-- **Croma:** integrada en el servidor pero **no probada** con la cuenta del equipo. Sin clave, el catálogo es curado manualmente y así se indica.
+- **Croma:** probada el 2026-11-21 a las 13:55 (Guatemala) con la cuenta del equipo: 6 extracciones candidatas guardadas con su `X-Request-Id`. La cobertura es parcial y hay errores de clasificación (ver `docs/croma-resultados.md`), así que el catálogo sigue siendo curado a mano y ningún candidato se incorporó automáticamente.
 - No hay conexión con Registro Mercantil, SAT, RENAP ni IGSS. No se presenta, paga ni aprueba nada.
 - Los campos del formulario DRPT-001 del IGSS requieren sesión: los datos de apoyo del IGSS se marcan como «Supuesto de la demo».
 - Ninguna fuente publica plazos de vigencia para estos documentos; no se inventan. El RTU «ratificado» queda «por confirmar» hasta que la persona lo declara.
