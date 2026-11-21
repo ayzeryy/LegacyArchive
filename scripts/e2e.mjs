@@ -10,7 +10,9 @@ const { chromium } = createRequire(import.meta.url)("playwright");
 const PUERTO = 3123;
 const BASE = `http://localhost:${PUERTO}`;
 const raiz = path.resolve(path.dirname(new URL(import.meta.url).pathname), "..");
-const capturas = path.join(raiz, "docs", "capturas");
+const capturas = process.env.CAPTURAS_DIR || path.join(raiz, "docs", "capturas");
+const ESCALA = Number(process.env.ESCALA || 1);
+const EXT = process.env.FORMATO === "jpg" ? "jpg" : "png";
 mkdirSync(capturas, { recursive: true });
 const db = path.join(mkdtempSync(path.join(os.tmpdir(), "la-e2e-")), "e2e.db");
 
@@ -29,9 +31,16 @@ function afirmar(c, m) { if (!c) throw new Error("Falló: " + m); ok(m); }
 
 let servidor = await iniciar();
 const navegador = await chromium.launch();
-const ctx = await navegador.newContext({ viewport: { width: 1280, height: 900 }, acceptDownloads: true });
+const ctx = await navegador.newContext({ viewport: { width: 1280, height: 860 }, deviceScaleFactor: ESCALA, acceptDownloads: true });
 const page = await ctx.newPage();
 page.setDefaultTimeout(10000);
+// Captura de la pantalla visible, centrada en el elemento que importa en ese paso.
+async function foto(p, nombre, foco) {
+  if (foco) await p.locator(foco).first().evaluate((el) => el.scrollIntoView({ block: "center" }));
+  else await p.evaluate(() => window.scrollTo(0, 0));
+  await p.waitForTimeout(350);
+  await p.screenshot({ path: path.join(capturas, `${nombre}.${EXT}`), ...(EXT === "jpg" ? { quality: 82 } : {}) });
+}
 const t0 = Date.now();
 try {
   // 1. Elegir proceso y tipo de solicitante
@@ -48,14 +57,14 @@ try {
   await page.getByText("exportacion_gestor_2025.json").first().waitFor();
   afirmar(await page.getByText(/no se vincula por semejanza de nombre/).count() > 0, "2b. Nombre parecido con otro CUI no se vincula");
   afirmar(await page.getByText(/no coincide con el del expediente/).count() > 0, "2c. Misma referencia con CUI distinto queda bloqueado");
-  await page.screenshot({ path: path.join(capturas, "1-fuentes.png"), fullPage: true });
+  await foto(page, "1-fuentes", "li:has-text(\"exportacion_gestor_2025.json\")");
 
   // 3-4. Revisar y resolver conflicto
   await page.goto(`${BASE}/tramite/rm-comerciante-empresa?paso=revisar`);
   const conflicto = page.locator("#req-rm-direccion-empresa");
   afirmar(await conflicto.getByText("En conflicto").count() === 1, "3. La dirección de la empresa aparece en conflicto con ambos valores");
   afirmar(await page.locator("#req-rm-direccion-empresa").getByText(/12 Calle 5-40/).count() === 0, "3b. La dirección fiscal no se propone como dirección de la empresa");
-  await page.screenshot({ path: path.join(capturas, "2-conflicto.png"), fullPage: true });
+  await foto(page, "2-conflicto", "#req-rm-direccion-empresa");
   await conflicto.locator("label", { hasText: "7a. Avenida 5-10, Zona 2" }).click();
   await conflicto.getByLabel(/Motivo de tu elección/).fill("El negocio se trasladó en 2024");
   await conflicto.getByRole("button", { name: "Resolver diferencia" }).click();
@@ -82,14 +91,14 @@ try {
   await fila("rm-dpi").getByRole("button", { name: "Confirmar documento" }).click();
   await fila("rm-dpi").getByText("Confirmado por la persona").waitFor();
   afirmar(await fila("rm-pago-empresa").getByText("Faltante").count() === 1, "5. Los comprobantes de pago ausentes aparecen como faltantes");
-  await page.screenshot({ path: path.join(capturas, "3-pendientes.png"), fullPage: true });
+  await foto(page, "3-pendientes", "#req-rm-pago-empresa");
 
   // 6. Descargar primer expediente
   await page.goto(`${BASE}/tramite/rm-comerciante-empresa?paso=preparar`);
   const [d1] = await Promise.all([page.waitForEvent("download"), page.getByRole("link", { name: "Descargar expediente preparado" }).click()]);
   const j1 = JSON.parse(readFileSync(await d1.path(), "utf8"));
   afirmar(j1.estado === "Borrador incompleto", "6. El primer expediente se descarga como «Borrador incompleto»");
-  await page.screenshot({ path: path.join(capturas, "4-preparar-rm.png"), fullPage: true });
+  await foto(page, "4-preparar-rm");
 
   // 7. Documentos obtenidos previamente
   await page.goto(`${BASE}/expediente#documentos`);
@@ -107,12 +116,12 @@ try {
   await page.getByRole("button", { name: "Empezar este trámite" }).click();
   await page.waitForURL(/igss-inscripcion-patronal/);
   await page.getByText("Tu expediente ya tiene información compatible").waitFor();
-  await page.screenshot({ path: path.join(capturas, "5-igss-reutilizar.png"), fullPage: true });
+  await foto(page, "5-igss-reutilizar");
   await page.getByRole("button", { name: "Usar mi información en este trámite" }).click();
   await page.goto(`${BASE}/tramite/igss-inscripcion-patronal?paso=revisar`);
   const dir = page.locator("#req-igss-direccion-empresa");
   afirmar((await dir.innerText()).includes("7a. Avenida 5-10") && (await dir.innerText()).includes("Confirmado por la persona"), "8. La dirección resuelta en el primer trámite se reutiliza en IGSS sin escribirla");
-  await page.screenshot({ path: path.join(capturas, "6-igss-revisar.png"), fullPage: true });
+  await foto(page, "6-igss-revisar", "#req-igss-direccion-empresa");
   await page.getByRole("button", { name: /Confirmar los \d+ datos sin conflicto/ }).click();
   await page.getByRole("button", { name: /Confirmar los \d+ datos sin conflicto/ }).waitFor({ state: "detached" });
 
@@ -133,7 +142,7 @@ try {
   const j2 = JSON.parse(readFileSync(await d2.path(), "utf8"));
   afirmar(j2.estado === "Preparado para revisión según el catálogo de la demo", "9c. El segundo expediente sale «Preparado para revisión según el catálogo de la demo»");
   ok(`   Reutilizados: ${j2.resumen.reutilizados}, escritos en IGSS: ${j2.resumen.escritos_en_este_tramite}`);
-  await page.screenshot({ path: path.join(capturas, "7-preparar-igss.png"), fullPage: true });
+  await foto(page, "7-preparar-igss");
 
   // 10. Cerrar y reabrir
   servidor.kill("SIGTERM");
@@ -142,14 +151,14 @@ try {
   await page.goto(`${BASE}/tramite/igss-inscripcion-patronal?paso=preparar`);
   afirmar(await page.getByText("Preparado para revisión según el catálogo de la demo").first().count() === 1, "10. Tras reiniciar el servidor se conservan datos y confirmaciones");
   await page.goto(`${BASE}/tramite/igss-inscripcion-patronal/resumen`);
-  await page.screenshot({ path: path.join(capturas, "8-resumen-imprimible.png"), fullPage: true });
+  await foto(page, "8-resumen-imprimible");
 
   // Móvil
-  const movil = await navegador.newPage({ viewport: { width: 390, height: 844 } });
+  const movil = await navegador.newPage({ viewport: { width: 390, height: 844 }, deviceScaleFactor: ESCALA });
   await movil.goto(`${BASE}/tramite/rm-comerciante-empresa?paso=revisar`);
   const ancho = await movil.evaluate(() => document.documentElement.scrollWidth);
   afirmar(ancho <= 390, `Sin desplazamiento horizontal en pantalla de 390 px (ancho ${ancho})`);
-  await movil.screenshot({ path: path.join(capturas, "9-movil.png"), fullPage: false });
+  await foto(movil, "9-movil", "#req-rm-direccion-empresa");
   console.log(`\nRecorrido completo en ${Math.round((Date.now() - t0) / 1000)} s. ${pasos.length} comprobaciones.`);
 } catch (e) {
   await page.screenshot({ path: path.join(capturas, "error.png"), fullPage: true });
