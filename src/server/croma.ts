@@ -79,11 +79,13 @@ export async function extraerConCroma(tramiteId: string, url: string): Promise<E
       signal: AbortSignal.timeout(90_000),
     });
     const requestId = res.headers.get("x-request-id");
-    const cuerpo = (await res.json().catch(() => null)) as { result?: unknown; error?: { code?: string; message?: string } } | null;
-    if (!res.ok || !cuerpo?.result) {
+    const cuerpo = (await res.json().catch(() => null)) as { data?: { result?: unknown }; result?: unknown; error?: { code?: string; message?: string } } | null;
+    // La API en vivo envuelve la respuesta en data; se conserva el formato directo documentado.
+    const resultado = cuerpo?.data?.result ?? cuerpo?.result;
+    if (!res.ok || !resultado) {
       return guardar(false, null, `Croma respondió ${res.status}${cuerpo?.error ? `: ${cuerpo.error.code ?? ""} ${cuerpo.error.message ?? ""}` : ""}`.trim(), requestId);
     }
-    return guardar(true, cuerpo.result, null, requestId);
+    return guardar(true, resultado, null, requestId);
   } catch (e) {
     return guardar(false, null, `No se pudo contactar a Croma: ${(e as Error).message}`, null);
   }
