@@ -45,9 +45,15 @@ const t0 = Date.now();
 try {
   // 1. Elegir proceso y tipo de solicitante
   await page.goto(BASE);
-  await page.getByRole("button", { name: "Empezar este trámite" }).first().click();
-  await page.waitForURL(/tramite\/rm-comerciante-empresa/);
-  ok("1. Abre Registro Mercantil como persona individual");
+  await page.getByPlaceholder(/abrir mi negocio/).fill("negocio");
+  afirmar(await page.getByRole("link", { name: /Inscripción patronal/ }).count() === 0, "0. La búsqueda «negocio» filtra los trámites");
+  await page.getByRole("link", { name: /Inscripción de comerciante individual/ }).click();
+  await page.waitForURL(/rm-comerciante-empresa\/inicio/);
+  await page.getByText("Video de ejemplo pendiente de grabar").waitFor();
+  await foto(page, "0-inicio-tramite");
+  await page.getByRole("button", { name: "Empezar este trámite" }).click();
+  await page.waitForURL(/tramite\/rm-comerciante-empresa$/);
+  ok("1. Busca el trámite, ve el video de ejemplo y lo abre como persona individual");
 
   // 2. Importación inválida, luego caso de demostración
   await page.locator('input[type=file][accept=".csv,.json"]').setInputFiles(path.join(raiz, "muestras", "importacion_invalida.csv"));
@@ -113,8 +119,10 @@ try {
 
   // 8. IGSS reutiliza
   await page.goto(BASE);
+  await page.getByPlaceholder(/abrir mi negocio/).fill("igss");
+  await page.getByRole("link", { name: /Inscripción patronal/ }).click();
   await page.getByRole("button", { name: "Empezar este trámite" }).click();
-  await page.waitForURL(/igss-inscripcion-patronal/);
+  await page.waitForURL(/tramite\/igss-inscripcion-patronal$/);
   await page.getByText("Tu expediente ya tiene información compatible").waitFor();
   await foto(page, "5-igss-reutilizar");
   await page.getByRole("button", { name: "Usar mi información en este trámite" }).click();

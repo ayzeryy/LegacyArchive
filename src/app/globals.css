@@ -1,31 +1,32 @@
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Public Sans Variable", ui-sans-serif, system-ui, sans-serif;
-  --color-tinta: #13232f;
-  --color-tinta-suave: #4a5a66;
-  --color-papel: #f6f5f1;
-  --color-linea: #dcd9d0;
-  --color-marca: #0e6b62;
-  --color-marca-oscura: #0a4f48;
-  --color-marca-clara: #e3f1ee;
-  --color-ok: #1f7a3d;
-  --color-ok-fondo: #e6f4ea;
-  --color-aviso: #8a5a00;
-  --color-aviso-fondo: #fdf3dc;
-  --color-alerta: #b3261e;
-  --color-alerta-fondo: #fbe9e7;
-  --color-info: #2d4f86;
-  --color-info-fondo: #e8eef8;
+  /* Estilo tipo iOS: tipografía del sistema, grises de iOS y azul del sistema. */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", "Public Sans Variable", system-ui, sans-serif;
+  --color-tinta: #1c1c1e;
+  --color-tinta-suave: #6e6e73;
+  --color-papel: #f2f2f7;
+  --color-linea: #e5e5ea;
+  --color-marca: #007aff;
+  --color-marca-oscura: #0062cc;
+  --color-marca-clara: #e8f1ff;
+  --color-ok: #248a3d;
+  --color-ok-fondo: #e8f6ec;
+  --color-aviso: #9a5b00;
+  --color-aviso-fondo: #fff4e0;
+  --color-alerta: #d70015;
+  --color-alerta-fondo: #ffeceb;
+  --color-info: #0062cc;
+  --color-info-fondo: #e8f1ff;
   --ease-salida: cubic-bezier(0.23, 1, 0.32, 1);
 }
 
 html { background: var(--color-papel); color: var(--color-tinta); }
-body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; font-size: 17px; }
 
 .boton {
   display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
-  border-radius: .5rem; padding: .625rem 1rem; font-weight: 600; font-size: .9375rem;
+  border-radius: .75rem; padding: .75rem 1.25rem; font-weight: 600; font-size: 1rem;
   transition: transform 160ms var(--ease-salida), background-color 150ms ease, box-shadow 150ms ease;
   min-height: 44px;
 }
@@ -38,8 +39,8 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
 
 :focus-visible { outline: 3px solid #f2b600; outline-offset: 2px; border-radius: 4px; }
 
-.tarjeta { background: white; border: 1px solid var(--color-linea); border-radius: .875rem; }
-.campo { width: 100%; border: 1px solid var(--color-linea); border-radius: .5rem; padding: .5rem .75rem; background: white; min-height: 44px; }
+.tarjeta { background: white; border: 1px solid transparent; border-radius: 1rem; box-shadow: 0 1px 2px rgba(0,0,0,.04); }
+.campo { width: 100%; border: 1px solid var(--color-linea); border-radius: .75rem; padding: .5rem .75rem; background: white; min-height: 44px; }
 
 .aparecer { animation: aparecer 220ms var(--ease-salida) both; }
 @keyframes aparecer { from { opacity: 0; transform: translateY(4px); } }
