@@ -69,3 +69,6 @@ body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; font-
   .entrada { animation: aparecer-suave 200ms ease both; animation-delay: 0ms; }
   @keyframes aparecer-suave { from { opacity: 0; } }
 }
+
+/* El buscador muestra su foco en el contenedor (focus-within); el campo interno no dibuja otro anillo. */
+.buscador-campo:focus, .buscador-campo:focus-visible { outline: none; box-shadow: none; }

@@ -35,7 +35,7 @@ export function Buscador({ tramites }: { tramites: OpcionTramite[] }) {
           value={q}
           onChange={(e) => setQ(e.target.value)}
           placeholder="Ej.: abrir mi negocio, patente, IGSS…"
-          className="h-14 w-full bg-transparent text-lg outline-none placeholder:text-tinta-suave/70 [&::-webkit-search-cancel-button]:hidden"
+          className="buscador-campo h-14 w-full appearance-none border-0 bg-transparent text-lg outline-none placeholder:text-tinta-suave/70 [&::-webkit-search-cancel-button]:hidden"
         />
         {q && (
           <button type="button" onClick={() => setQ("")} className="grid size-8 place-items-center rounded-full bg-linea text-tinta-suave" aria-label="Borrar búsqueda">
