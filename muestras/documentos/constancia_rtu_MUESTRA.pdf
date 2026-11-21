@@ -1,0 +1,43 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 574 >>
+stream
+BT /F1 30 Tf 0.85 0.1 0.1 rg 60 720 Td (DOCUMENTO SINTETICO - MUESTRA) Tj ET
+BT /F1 12 Tf 0 0 0 rg 60 690 Td 16 TL
+(Constancia del RTU \(simulada\)) '
+(NIT: 8451273-6 \(ficticio\)) '
+(Contribuyente: Maria Ixchel Lopez Cumez \(ficticia\)) '
+(Direccion fiscal: 12 Calle 5-40, Zona 1, San Juan Sacatepequez) '
+(Estado de ratificacion: no verificable en esta demo) '
+() '
+(Archivo de demostracion para LegacyArchive. No es un documento oficial.) '
+(No fue emitido por ninguna institucion ni por LegacyArchive.) '
+(Representa un documento que la persona obtuvo previamente.) '
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+xref
+0 6
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000000866 00000 n 
+trailer
+<< /Size 6 /Root 1 0 R >>
+startxref
+963
+%%EOF

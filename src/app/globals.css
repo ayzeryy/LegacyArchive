@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Public Sans Variable", ui-sans-serif, system-ui, sans-serif;
+  --color-tinta: #13232f;
+  --color-tinta-suave: #4a5a66;
+  --color-papel: #f6f5f1;
+  --color-linea: #dcd9d0;
+  --color-marca: #0e6b62;
+  --color-marca-oscura: #0a4f48;
+  --color-marca-clara: #e3f1ee;
+  --color-ok: #1f7a3d;
+  --color-ok-fondo: #e6f4ea;
+  --color-aviso: #8a5a00;
+  --color-aviso-fondo: #fdf3dc;
+  --color-alerta: #b3261e;
+  --color-alerta-fondo: #fbe9e7;
+  --color-info: #2d4f86;
+  --color-info-fondo: #e8eef8;
+  --ease-salida: cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+html { background: var(--color-papel); color: var(--color-tinta); }
+body { font-family: var(--font-sans); -webkit-font-smoothing: antialiased; }
+
+.boton {
+  display: inline-flex; align-items: center; justify-content: center; gap: .5rem;
+  border-radius: .5rem; padding: .625rem 1rem; font-weight: 600; font-size: .9375rem;
+  transition: transform 160ms var(--ease-salida), background-color 150ms ease, box-shadow 150ms ease;
+  min-height: 44px;
+}
+.boton:active:not(:disabled) { transform: scale(0.97); }
+.boton:disabled { opacity: .55; cursor: not-allowed; }
+.boton-primario { background: var(--color-marca); color: white; }
+@media (hover: hover) and (pointer: fine) { .boton-primario:hover:not(:disabled) { background: var(--color-marca-oscura); } .boton-secundario:hover:not(:disabled) { background: #eeece6; } }
+.boton-secundario { background: white; color: var(--color-tinta); box-shadow: inset 0 0 0 1px var(--color-linea); }
+.boton-chico { padding: .375rem .75rem; min-height: 36px; font-size: .875rem; }
+
+:focus-visible { outline: 3px solid #f2b600; outline-offset: 2px; border-radius: 4px; }
+
+.tarjeta { background: white; border: 1px solid var(--color-linea); border-radius: .875rem; }
+.campo { width: 100%; border: 1px solid var(--color-linea); border-radius: .5rem; padding: .5rem .75rem; background: white; min-height: 44px; }
+
+.aparecer { animation: aparecer 220ms var(--ease-salida) both; }
+@keyframes aparecer { from { opacity: 0; transform: translateY(4px); } }
+@media (prefers-reduced-motion: reduce) { .aparecer { animation: none; } .boton:active:not(:disabled) { transform: none; } }
+
+@media print {
+  .no-imprimir { display: none !important; }
+  html, body { background: white; }
+  .tarjeta { border-color: #999; break-inside: avoid; }
+}
