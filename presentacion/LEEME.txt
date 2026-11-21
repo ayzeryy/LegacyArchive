@@ -1,0 +1,67 @@
+LEGACYARCHIVE — PRESENTACIÓN DE TRES MINUTOS
+
+Abre index.html en Edge, Chrome o Firefox. El deck es un HTML autónomo: CSS,
+JavaScript, tipografía y captura incluidos. Funciona sin Internet y sin servidor.
+El enlace «Abrir la demo» necesita la app ejecutándose en localhost:3000.
+
+CONTROLES
+Flechas izquierda/derecha, PageUp/PageDown, espacio o rueda: navegar.
+En móvil: deslizar horizontalmente. Home/End: primera/última diapositiva.
+N: mostrar/ocultar notas en la pantalla actual. Se proyectan si están abiertas.
+F: pantalla completa. Escape: salir. F11 es la alternativa del navegador.
+Ctrl+P imprime las seis diapositivas sin notas.
+E, o la esquina superior izquierda: editar texto. Las ediciones se guardan
+localmente en el navegador cuando este lo permite. «Descargar HTML» o Ctrl+S
+en modo edición descarga una copia con los cambios. Revisar el ajuste de texto
+tras editar. Salir de edición con el botón antes de presentar.
+
+DISEÑO
+Adaptado a la skill frontend-slides suministrada por el usuario:
+https://github.com/zarazhangrui/frontend-slides
+Se usaron SKILL.md, viewport-base.css, html-template.md y animation-patterns.md,
+consultados el 2026-11-21. La estructura usa un escenario fijo de 1920x1080
+escalado de forma uniforme, incluidos los móviles. Estética editorial con
+la tipografía y los colores de LegacyArchive. Licencias incluidas.
+Para personalizar colores, editar las variables en :root dentro del HTML.
+
+TIEMPOS PROPUESTOS (180 SEGUNDOS, NO MEDICIÓN DE RENDIMIENTO)
+1. Problema: 25 s
+2. Propuesta: 20 s
+3. Demo en vivo: 75 s
+4. Qué funciona y qué es sintético: 20 s
+5. Croma: 25 s
+6. Cierre: 15 s
+
+FUENTES Y PENDIENTES EDITORIALES
+Basado en docs/HANDOFF.md, CLAUDE.md, catalog/catalogo.json y
+ docs/croma-resultados.md. docs/GUION.md todavía no existía en la rama remota
+feat/demo-expediente al preparar esta versión. Las notas son una propuesta
+provisional para ajustar cuando llegue ese guion.
+
+La captura de importación viene de docs/capturas/error.png. Se inspeccionó:
+muestra la pantalla de importación, sin un mensaje de error visible. Está
+incluida dentro del HTML. No muestra el momento de reutilización en IGSS ni
+es evidencia de un recorrido e2e.
+
+Las cifras de Croma (6 fuentes, 27 candidatos) provienen de la prueba real
+documentada del 21 de noviembre de 2026 a las 13:55, Guatemala. Son resultados
+guardados. No se prometen porcentajes de ahorro ni tiempos medidos del trámite.
+Los conteos de reutilización se muestran únicamente desde la demo actual.
+
+ANTES DE PRESENTAR
+1. En la laptop final: npm run build y luego npm start desde la raíz del repo.
+2. Abrir /expediente y usar «Reiniciar la demo» antes del ensayo.
+3. Ensayar el recorrido y preparar la pestaña con los archivos sintéticos
+   importados, en el punto anterior a resolver el conflicto de dirección.
+4. Tener la patente y el RTU sintéticos disponibles para mostrar reutilización.
+5. Verificar que el bloque en vivo cabe en 75 s. Si no, reducir la navegación y
+   empezar desde un expediente preparado durante el ensayo. No anunciar un
+   tiempo de recorrido como medido si no se midió.
+6. En IGSS, mostrar primero la autorización y luego la dirección reutilizada.
+   Escribir cantidad de trabajadores aparte. CUI y NIT siguen siendo distintos.
+7. Si falla la demo, explicar el flujo y sus límites. No presentar la captura
+   estática como interacción en vivo o inscripción aprobada.
+
+TIPOGRAFÍA
+Public Sans, incluida desde la dependencia del proyecto y embebida en el HTML.
+Licencia en assets/LICENCIA-Public-Sans.txt.
