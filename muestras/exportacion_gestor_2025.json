@@ -1,0 +1,36 @@
+{
+  "aviso": "ARCHIVO SINTÉTICO DE DEMOSTRACIÓN. Ninguna persona, dirección ni identificador es real.",
+  "system": "Gestor de expedientes v2 (sintético)",
+  "export_version": "2.3",
+  "exported_at": "2025-09-02T16:20:00-06:00",
+  "synthetic": true,
+  "records": [
+    {
+      "case_ref": "LA-DEMO-001",
+      "document_type": "DPI",
+      "document_number": "3021456780108",
+      "tax_id": "8451273-6",
+      "given_names": "María Ixchel",
+      "family_names": "López Cúmez",
+      "nationality": "Guatemalteca",
+      "department": "Guatemala",
+      "fiscal_address": "12 Calle 5-40, Zona 1, San Juan Sacatepéquez, Guatemala",
+      "business_address": "7a. Avenida 5-10, Zona 2, San Juan Sacatepéquez, Guatemala",
+      "home_address": "Lote 14, Aldea Cruz Blanca, San Juan Sacatepéquez, Guatemala",
+      "phone": "+502 5512 3478",
+      "email": "maria.lopez@ejemplo.invalid",
+      "trade_name": "Tejidos Ixchel",
+      "updated_at": "2025-08-14"
+    },
+    {
+      "case_ref": "LA-DEMO-001",
+      "document_type": "DPI",
+      "document_number": "3021456780213",
+      "tax_id": "8451273-6",
+      "given_names": "María Ixchel",
+      "family_names": "López Cúmez",
+      "business_address": "Mercado Municipal, local 22, San Juan Sacatepéquez, Guatemala",
+      "updated_at": "2024-02-10"
+    }
+  ]
+}
