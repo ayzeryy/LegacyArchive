@@ -35,6 +35,9 @@ export function FilaPendiente({ r, procesoId, sugerencias }: { r: EvaluacionRequ
         {req.condicion && (<><dt className="font-medium">Condición</dt><dd>Aplica {req.condicion.texto}.</dd></>)}
       </dl>
       {r.aplica !== false && <p className="mt-2 text-sm">{r.explicacion}</p>}
+      {req.tipo === "dato" && r.elegida && (
+        <p className="mt-2 rounded-lg bg-papel px-3 py-2"><span className="text-xs text-tinta-suave">Escribiste: </span><strong>{r.elegida.valor}</strong>{r.confirmacion && <span className="block text-xs text-ok">Guardado el {fechaCorta(r.confirmacion.fecha)} · «{r.confirmacion.motivo}»</span>}</p>
+      )}
 
       {r.aplica !== false && req.tipo === "dato" && r.estado === "faltante" && (
         <form className="mt-3 grid gap-2" onSubmit={async (e) => { e.preventDefault(); if (await ejecutar("/api/capturar", { procesoId, concepto: req.concepto, valor, motivo: "" })) setValor(""); }}>

@@ -31,8 +31,8 @@ export default async function PaginaTramite({ params, searchParams }: { params: 
   const { proceso, tramite: t, evaluacion: ev } = datos;
   const fuentes = fuentesImportadas();
   const aplicables = ev.requisitos.filter((r) => r.aplica !== false);
-  const paraRevisar = aplicables.filter((r) => r.requisito.tipo === "dato" && r.opciones.length > 0).sort((a, b) => Number(b.estado === "en_conflicto") - Number(a.estado === "en_conflicto"));
-  const pendientes = ev.requisitos.filter((r) => r.requisito.tipo === "documento" || (r.requisito.tipo === "dato" && r.opciones.length === 0));
+  const paraRevisar = aplicables.filter((r) => r.requisito.tipo === "dato" && r.opciones.length > 0 && !r.capturadoAqui).sort((a, b) => Number(b.estado === "en_conflicto") - Number(a.estado === "en_conflicto"));
+  const pendientes = ev.requisitos.filter((r) => r.requisito.tipo === "documento" || (r.requisito.tipo === "dato" && (r.opciones.length === 0 || r.capturadoAqui)));
   const conflictos = ev.resumen.porEstado.en_conflicto;
   const disponibles = paraRevisar.filter((r) => r.estado === "disponible").length;
   const faltan = pendientes.filter((r) => r.aplica !== false && r.estado !== "confirmado_usuario").length;

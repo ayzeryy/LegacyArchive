@@ -1,5 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { FileSpreadsheet, FileJson, Sparkles, Upload, Link2Off, ShieldAlert } from "lucide-react";
 import type { FuenteImportada } from "@/server/repo";
 import { ETIQUETA_FUENTE } from "@/domain/tipos";
@@ -8,6 +9,9 @@ import { fechaHora, MensajeError } from "./ui";
 
 export function PanelFuentes({ procesoId, fuentes }: { procesoId: string; fuentes: FuenteImportada[] }) {
   const { ejecutar, error, ocupado } = useAccion();
+  const router = useRouter();
+  // Mantiene a la persona en este paso para que vea el resultado de la importación.
+  const quedarse = () => router.replace("?paso=fuentes", { scroll: false });
   const [aviso, setAviso] = useState<string | null>(null);
   const input = useRef<HTMLInputElement>(null);
 
@@ -20,6 +24,7 @@ export function PanelFuentes({ procesoId, fuentes }: { procesoId: string; fuente
       f.set("procesoId", procesoId);
       const r = await ejecutar("/api/importar", f);
       if (r) {
+        quedarse();
         const res = r.resultado as { valoresGuardados: number; vinculados: number; errores: unknown[] };
         setAviso(`«${file.name}»: ${res.valoresGuardados} valores guardados de ${res.vinculados} registro(s) vinculado(s)${res.errores.length ? `, ${res.errores.length} fila(s) con error` : ""}.`);
       }
@@ -33,7 +38,7 @@ export function PanelFuentes({ procesoId, fuentes }: { procesoId: string; fuente
         <h2 className="text-lg font-bold">Importa tus fuentes</h2>
         <p className="mt-1 text-sm text-tinta-suave">Admite el CSV del sistema antiguo (Windows-1252, separado por «;») y el JSON del gestor actual. Solo se leen: los archivos originales no se modifican.</p>
         <div className="mt-4 flex flex-col gap-2 sm:flex-row">
-          <button className="boton boton-primario" disabled={ocupado} onClick={async () => { setAviso(null); const r = await ejecutar("/api/importar-demo", { procesoId }); if (r) setAviso("Caso de demostración cargado: 2 archivos sintéticos."); }}>
+          <button className="boton boton-primario" disabled={ocupado} onClick={async () => { setAviso(null); const r = await ejecutar("/api/importar-demo", { procesoId }); if (r) { quedarse(); setAviso("Caso de demostración cargado: 2 archivos sintéticos."); } }}>
             <Sparkles aria-hidden className="size-4" /> {ocupado ? "Importando…" : "Cargar caso de demostración"}
           </button>
           <label className="boton boton-secundario cursor-pointer">

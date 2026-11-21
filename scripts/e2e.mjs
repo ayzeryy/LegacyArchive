@@ -15,7 +15,7 @@ mkdirSync(capturas, { recursive: true });
 const db = path.join(mkdtempSync(path.join(os.tmpdir(), "la-e2e-")), "e2e.db");
 
 function iniciar() {
-  const p = spawn("npx", ["next", "start", "-p", String(PUERTO)], { cwd: raiz, env: { ...process.env, LEGACYARCHIVE_DB_PATH: db }, stdio: "pipe" });
+  const p = spawn(process.execPath, [path.join(raiz, "node_modules", "next", "dist", "bin", "next"), "start", "-p", String(PUERTO)], { cwd: raiz, env: { ...process.env, LEGACYARCHIVE_DB_PATH: db }, stdio: "pipe" });
   return new Promise((ok, mal) => {
     const t = setTimeout(() => mal(new Error("El servidor no inició")), 30000);
     p.stdout.on("data", (d) => { if (String(d).includes("Ready")) { clearTimeout(t); ok(p); } });
@@ -31,6 +31,7 @@ let servidor = await iniciar();
 const navegador = await chromium.launch();
 const ctx = await navegador.newContext({ viewport: { width: 1280, height: 900 }, acceptDownloads: true });
 const page = await ctx.newPage();
+page.setDefaultTimeout(10000);
 const t0 = Date.now();
 try {
   // 1. Elegir proceso y tipo de solicitante
@@ -41,8 +42,8 @@ try {
 
   // 2. Importación inválida, luego caso de demostración
   await page.locator('input[type=file][accept=".csv,.json"]').setInputFiles(path.join(raiz, "muestras", "importacion_invalida.csv"));
-  await page.getByRole("alert").waitFor();
-  afirmar((await page.getByRole("alert").innerText()).includes("Faltan las columnas"), "2a. Una importación inválida muestra el error y no guarda nada");
+  await page.locator("p[role=alert]").waitFor();
+  afirmar((await page.locator("p[role=alert]").innerText()).includes("Faltan las columnas"), "2a. Una importación inválida muestra el error y no guarda nada");
   await page.getByRole("button", { name: "Cargar caso de demostración" }).click();
   await page.getByText("exportacion_gestor_2025.json").first().waitFor();
   afirmar(await page.getByText(/no se vincula por semejanza de nombre/).count() > 0, "2b. Nombre parecido con otro CUI no se vincula");
@@ -55,7 +56,7 @@ try {
   afirmar(await conflicto.getByText("En conflicto").count() === 1, "3. La dirección de la empresa aparece en conflicto con ambos valores");
   afirmar(await page.locator("#req-rm-direccion-empresa").getByText(/12 Calle 5-40/).count() === 0, "3b. La dirección fiscal no se propone como dirección de la empresa");
   await page.screenshot({ path: path.join(capturas, "2-conflicto.png"), fullPage: true });
-  await conflicto.getByText("7a. Avenida 5-10, Zona 2").click();
+  await conflicto.locator("label", { hasText: "7a. Avenida 5-10, Zona 2" }).click();
   await conflicto.getByLabel(/Motivo de tu elección/).fill("El negocio se trasladó en 2024");
   await conflicto.getByRole("button", { name: "Resolver diferencia" }).click();
   await conflicto.getByText("Confirmado por la persona").waitFor();
@@ -121,17 +122,16 @@ try {
   await fila("igss-trabajadores").locator("input").fill("2");
   await fila("igss-trabajadores").getByRole("button", { name: "Guardar dato" }).click();
   await fila("igss-trabajadores").getByText("Confirmado por la persona").waitFor();
-  for (const id of ["igss-dpi", "igss-patente"]) {
-    await fila(id).getByRole("button", { name: "Confirmar documento" }).click();
-    await fila(id).getByText("Confirmado por la persona").waitFor();
-  }
+  afirmar(await fila("igss-dpi").getByText("Confirmado por la persona").count() === 1, "9b. La copia del DPI confirmada en el primer trámite se reutiliza");
+  await fila("igss-patente").getByRole("button", { name: "Confirmar documento" }).click();
+  await fila("igss-patente").getByText("Confirmado por la persona").waitFor();
   await fila("igss-rtu").getByLabel(/Declaro que cumple/).check();
   await fila("igss-rtu").getByRole("button", { name: "Confirmar documento" }).click();
   await fila("igss-rtu").getByText("Confirmado por la persona").waitFor();
   await page.goto(`${BASE}/tramite/igss-inscripcion-patronal?paso=preparar`);
   const [d2] = await Promise.all([page.waitForEvent("download"), page.getByRole("link", { name: "Descargar expediente preparado" }).click()]);
   const j2 = JSON.parse(readFileSync(await d2.path(), "utf8"));
-  afirmar(j2.estado === "Preparado para revisión según el catálogo de la demo", "9b. El segundo expediente sale «Preparado para revisión según el catálogo de la demo»");
+  afirmar(j2.estado === "Preparado para revisión según el catálogo de la demo", "9c. El segundo expediente sale «Preparado para revisión según el catálogo de la demo»");
   ok(`   Reutilizados: ${j2.resumen.reutilizados}, escritos en IGSS: ${j2.resumen.escritos_en_este_tramite}`);
   await page.screenshot({ path: path.join(capturas, "7-preparar-igss.png"), fullPage: true });
 

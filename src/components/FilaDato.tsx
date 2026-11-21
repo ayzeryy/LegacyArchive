@@ -34,16 +34,16 @@ export function FilaDato({ r, procesoId }: { r: EvaluacionRequisito; procesoId: 
           <legend className="text-sm">{r.explicacion}</legend>
           <div className="mt-3 space-y-2">
             {r.opciones.map((o) => (
-              <label key={o.clave} className={`block cursor-pointer rounded-lg border p-3 ${elegida === o.clave ? "border-marca bg-marca-clara" : "border-linea"}`}>
-                <span className="flex items-start gap-2">
+              <div key={o.clave} className={`rounded-lg border p-3 ${elegida === o.clave ? "border-marca bg-marca-clara" : "border-linea"}`}>
+                <label className="flex cursor-pointer items-start gap-2">
                   <input type="radio" name={`op-${r.requisito.id}`} className="mt-1 accent-marca" checked={elegida === o.clave} onChange={() => setElegida(o.clave)} />
                   <span>
                     <span className="font-medium">{o.valor}</span>
                     <span className="block text-xs text-tinta-suave">Fecha del dato: {fechaCorta(o.procedencias[0].fechaDato)}</span>
                   </span>
-                </span>
+                </label>
                 <Procedencia opcion={o} />
-              </label>
+              </div>
             ))}
           </div>
           <label className="mt-3 block text-sm font-medium" htmlFor={`mot-${r.requisito.id}`}>Motivo de tu elección (obligatorio)</label>
