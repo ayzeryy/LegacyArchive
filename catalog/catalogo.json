@@ -3,7 +3,7 @@
   "revisado_en": "2026-11-21",
   "metodo": "Revisión manual de las páginas y PDF oficiales enlazados. Ningún requisito proviene de una llamada en vivo ni de Croma.",
   "alcance": "Subconjunto para una comerciante individual guatemalteca, propietaria única, que inscribe una empresa y luego se inscribe como patrona ante el IGSS. No cubre sociedades, sucursales, extranjeros, representación legal ni afiliación de trabajadores.",
-  "croma": { "estado": "pendiente", "nota": "Sin acceso verificado con la cuenta del equipo. El catálogo es curado manualmente." },
+  "croma": { "estado": "probado", "nota": "2026-11-21, 13:55 (Guatemala): seis fuentes probadas desde /catalogo; seis extracciones candidatas guardadas con fecha y X-Request-Id. Cobertura parcial y errores de clasificación: ver docs/croma-resultados.md. El catálogo sigue siendo curado manualmente; no se incorporaron candidatos automáticamente." },
   "tramites": [
     {
       "id": "rm-comerciante-empresa",
